@@ -1,0 +1,23 @@
+# Render Blueprint — KSAK Audio site (ksakaudio.com)
+# Web service built from this repo's Dockerfile.
+# The SQLite DB lives on the persistent disk mounted at /data.
+services:
+  - type: web
+    name: ksak-audio
+    env: docker
+    plan: starter
+    region: virginia
+    healthCheckPath: /
+    disk:
+      name: ksak-data
+      mountPath: /data
+      sizeGB: 2
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /data/ksak.db
+      - key: DOWNLOADS_DIR
+        value: /app/downloads
+      - key: SESSION_SECRET
+        generateValue: true

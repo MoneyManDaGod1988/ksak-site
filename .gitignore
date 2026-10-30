@@ -1,0 +1,9 @@
+node_modules/
+.env
+data/
+*.db
+*.db-wal
+*.db-shm
+# Dev screenshots (regenerable, not part of the deploy set)
+home-hero-screenshot.png
+signin-screenshot.png

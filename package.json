@@ -1,0 +1,20 @@
+{
+  "name": "ksak-audio-site",
+  "version": "1.0.0",
+  "description": "KSAK Audio plugins website — showcase, custom accounts, gated 30-day trial downloads.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "verify": "node tests/verify.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
