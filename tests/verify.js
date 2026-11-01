@@ -8,11 +8,11 @@ const ROOT = path.join(__dirname, '..');
 const TMP = '/tmp/ksak-verify';
 const PORT = 3219;
 const BASE = `http://127.0.0.1:${PORT}`;
-const EXPECTED = { pre: 10259035, colossus: 15731331 };
+const EXPECTED = { pre: 10259266, colossus: 15731331 };
 const FILES = {
-  pre: '/home/hatch/workspace/goals/ksak-pre-vocal-plugin/files/KSAK-Pre-Setup-v0.3.6-TRIAL.exe',
-  delay: '/home/hatch/workspace/goals/ksak-simple-delay/files/KSAK-Simple-Delay-Setup-v0.1.4-TRIAL.exe',
-  reverb: '/home/hatch/workspace/goals/ksak-simple-reverb/files/KSAK-Simple-Reverb-Setup-v0.1.3-TRIAL.exe',
+  pre: '/home/hatch/workspace/goals/ksak-pre-vocal-plugin/files/KSAK-Pre-Setup-v0.3.8-TRIAL.exe',
+  delay: '/home/hatch/workspace/goals/ksak-simple-delay/files/KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe',
+  reverb: '/home/hatch/workspace/goals/ksak-simple-reverb/files/KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe',
   omega: '/home/hatch/workspace/goals/ksak-omega-eq/files/KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',
   colossus: '/home/hatch/workspace/goals/ksak-ultimate-compressor/files/KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',
 };

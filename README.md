@@ -11,9 +11,9 @@ app, no build step.
 npm install
 mkdir -p downloads data
 # put the 5 TRIAL installers in downloads/ (exact names):
-#   KSAK-Pre-Setup-v0.3.6-TRIAL.exe
-#   KSAK-Simple-Delay-Setup-v0.1.4-TRIAL.exe
-#   KSAK-Simple-Reverb-Setup-v0.1.3-TRIAL.exe
+#   KSAK-Pre-Setup-v0.3.8-TRIAL.exe
+#   KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe
+#   KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe
 #   KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe
 #   KSAK-Colossus-Setup-v0.1.3-TRIAL.exe
 cp .env.example .env   # set SESSION_SECRET to a long random string
