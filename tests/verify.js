@@ -53,15 +53,15 @@ async function main() {
 
   try {
     const home = await (await req(null, '/')).text();
-    check('Showcase lists all 5 plugins', ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS'].every(n => home.includes(n)));
+    check('Showcase lists all 6 plugins', ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'CHRONOS'].every(n => home.includes(n)));
     check('Signed-out home exposes no /dl/ URL', !home.includes('/dl/'));
     check('Home has zero personal-reference strings', !/kurt|moneyman|stratford|shoot for|johnstown/i.test(home));
 
     let allImg = true;
-    for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
+    for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
       const r = await fetch(`${BASE}/assets/${a}.png`); if (!r.ok) allImg = false; await r.arrayBuffer();
     }
-    check('All 15 images serve (5 faces + 10 modules)', allImg);
+    check('All 16 images serve (6 faces + 10 modules)', allImg);
 
     const anon = await req(null, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plugin: 'pre' }) });
     const anonBody = await anon.text();
@@ -96,6 +96,10 @@ async function main() {
       const buf = await dl.arrayBuffer();
       check(`Signed-in download of ${pid} is byte-exact`, dl.status === 200 && buf.byteLength === EXPECTED[pid], `${buf.byteLength} B vs expected ${EXPECTED[pid]} B`);
     }
+
+    const chrRes = await req(member, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf }, body: JSON.stringify({ plugin: 'chronos' }) });
+    const chrBody = await chrRes.text();
+    check('CHRONOS has no trial download yet (503, no URL)', chrRes.status === 503 && !chrBody.includes('/dl/'), `status ${chrRes.status}`);
 
     const ownerView = await (await req(owner, '/owner')).text();
     check('Owner view lists both accounts', ownerView.includes('owner@example.test') && ownerView.includes('member@example.test'));

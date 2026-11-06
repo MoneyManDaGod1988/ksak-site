@@ -59,6 +59,7 @@ const PLUGINS = [
   { id: 'reverb',   name: 'Simple Reverb',   sub: 'The Vault',              version: 'v0.1.5', img: '/assets/reverb.png',   accent: '#44f7e3', file: 'KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe', size: 6700004,  hook: 'Space you can feel, not fight.', chips: ['Size + Mod', '5-band EQ', 'Spectral meter', 'Freeze'] },
   { id: 'omega',    name: 'OMEGA EQ',        sub: 'Flagship EQ',            version: 'v0.1.4', img: '/assets/omega.png',    accent: '#b07dff', file: 'KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',       size: 6198141,  hook: 'Every band, every type, zero clutter.', chips: ['7 filter types', '15 local AI assists', 'EXPAND depth'] },
   { id: 'colossus', name: 'COLOSSUS',        sub: 'Flagship Compressor',    version: 'v0.1.3', img: '/assets/colossus.png', accent: '#c9ccd4', file: 'KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',       size: 15731331, hook: 'A monument of compression.', chips: ['7 circuits', 'Dual Engine', '8-band Multiband', 'Spectral'] },
+  { id: 'chronos',  name: 'KSAK CHRONOS',    sub: 'Flagship FX Sequencer',  version: 'v0.1.0', img: '/assets/chronos.png',  accent: '#2dffc4', trial: false, file: null, size: 0, hook: 'RC-20 meets Effectrix on steroids.', chips: ['32-step sequencer', '6 color modules + MAGNET', 'Loop FX engine', 'Pitch + formant shift', '170 factory presets'] },
 ];
 const MODULES = [
   ['Gate', 'Noise Gate'], ['Drive', 'Drive Preamp'], ['Comp', 'Vocal Comp'], ['Dyn EQ', 'Dynamic EQ'],
@@ -151,9 +152,9 @@ function authRateLimit(req, res, next) {
 function page(title, body, extra = '') {
   const u = extraUser();
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)} — KSAK Audio</title><meta name="description" content="KSAK Audio Effects Plugin Suite: KSAK-Pre, Simple Delay, Simple Reverb, OMEGA EQ, COLOSSUS. 30-day trials.">
+<title>${esc(title)} — KSAK Audio</title><meta name="description" content="KSAK Audio Effects Plugin Suite: KSAK-Pre, Simple Delay, Simple Reverb, OMEGA EQ, COLOSSUS, KSAK CHRONOS. 30-day trials.">
 <link rel="icon" href="/img/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
-<meta property="og:type" content="website"><meta property="og:site_name" content="KSAK Audio"><meta property="og:title" content="${esc(title)} — KSAK Audio"><meta property="og:description" content="KSAK Audio Effects Plugin Suite: KSAK-Pre, Simple Delay, Simple Reverb, OMEGA EQ, COLOSSUS. 30-day trials."><meta property="og:image" content="https://ksakaudio.com/img/ksak-emblem.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="KSAK Audio"><meta property="og:title" content="${esc(title)} — KSAK Audio"><meta property="og:description" content="KSAK Audio Effects Plugin Suite: KSAK-Pre, Simple Delay, Simple Reverb, OMEGA EQ, COLOSSUS, KSAK CHRONOS. 30-day trials."><meta property="og:image" content="https://ksakaudio.com/img/ksak-emblem.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${esc(title)} — KSAK Audio"><meta name="twitter:image" content="https://ksakaudio.com/img/ksak-emblem.png">
 <style>
 :root{--bg:#020a07;--panel:#04120c;--panel2:#06231a;--text:#eef2f5;--muted:#93a89c;--line:#123527;--em:#0fe08a;--mint:#2dffc4;--teal:#44f7e3;--chrome:#c9ccd4}
@@ -219,14 +220,17 @@ app.get('/', (req, res) => {
   <article class="card" id="${p.id === 'pre' ? 'pre' : ''}">
     <img src="${p.img}" alt="${esc(p.name)} plugin interface" loading="lazy">
     <div class="in">
-      <div class="tag">${String(i + 1).padStart(2, '0')} · ${esc(p.sub)} · ${p.version} · 30-Day Trial</div>
+      <div class="tag">${String(i + 1).padStart(2, '0')} · ${esc(p.sub)} · ${p.version}${p.trial === false ? '' : ' · 30-Day Trial'}</div>
       <h3 style="color:${p.accent}">${esc(p.name)}</h3>
       <p class="hook">${esc(p.hook)}</p>
       <div class="chips">${p.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
     </div>
   </article>`).join('');
   const nodes = MODULES.map((m, i) => `${i ? '<span class="arrow">›</span>' : ''}<button class="node${i === 0 ? ' on' : ''}" data-i="${i}" aria-label="Module ${m.n} ${esc(m.full)}">${m.n}</button>`).join('');
-  const dl = PLUGINS.map(p => `
+  const dl = PLUGINS.map(p => p.trial === false ? `
+    <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} · VST3 · Windows</span></div>
+    <button class="btn locked" disabled>Trial coming soon</button>
+    </div>` : `
     <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} TRIAL · ${mb(p.size)} · VST3 · Windows</span></div>
     ${req.user
       ? `<button class="btn" data-dl="${p.id}">Download</button>`
@@ -237,15 +241,16 @@ app.get('/', (req, res) => {
     <div class="herotop">
       <img class="heroemblem" src="/img/ksak-emblem.png" alt="KSAK Audio emblem">
       <div>
-        <h1>Five plugins.<br><em>One suite.</em></h1>
-        <p>The KSAK Audio Effects Plugin Suite — a complete vocal chain, two feel-first essentials, and two flagships. Every trial runs 30 days, then locks.</p>
+        <h1>Six plugins.<br><em>One suite.</em></h1>
+        <p>The KSAK Audio Effects Plugin Suite — a complete vocal chain, two feel-first essentials, and three flagships. Every trial runs 30 days, then locks.</p>
       </div>
     </div>
     <div class="stats">
-      <div class="stat"><b>5</b><span>Plugins</span></div>
+      <div class="stat"><b>6</b><span>Plugins</span></div>
       <div class="stat"><b>10</b><span>KSAK-Pre modules</span></div>
       <div class="stat"><b>7</b><span>COLOSSUS circuits</span></div>
       <div class="stat"><b>15</b><span>OMEGA local AI assists</span></div>
+      <div class="stat"><b>170</b><span>CHRONOS factory presets</span></div>
       <div class="stat"><b>30</b><span>Day free trials</span></div>
     </div>
     <img class="heroimg" src="/assets/pre.png" alt="KSAK-Pre plugin interface">
@@ -329,7 +334,9 @@ app.get('/account', requireAuth, (req, res) => {
   const rows = history.length
     ? history.map(d => { const p = PLUGINS.find(x => x.id === d.plugin_id); return `<tr><td>${esc(p ? p.name : d.plugin_id)}</td><td>${esc(new Date(d.created_at).toLocaleString('en-US'))}</td></tr>`; }).join('')
     : '<tr><td colspan="2" class="muted">No downloads yet.</td></tr>';
-  const dl = PLUGINS.map(p => `<div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} TRIAL · ${mb(p.size)}</span></div><button class="btn" data-dl="${p.id}">Download</button></div>`).join('');
+  const dl = PLUGINS.map(p => p.trial === false
+    ? `<div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} · VST3 · Windows</span></div><button class="btn locked" disabled>Trial coming soon</button></div>`
+    : `<div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} TRIAL · ${mb(p.size)}</span></div><button class="btn" data-dl="${p.id}">Download</button></div>`).join('');
   res.send(page('My Account', `
   <meta name="csrf" content="${esc(req.session.csrf)}">
   <section class="wrap" style="padding:40px 20px">
@@ -365,6 +372,7 @@ app.post('/api/download-link', (req, res) => {
   if (!csrfOk(req)) return res.status(403).json({ error: 'Session check failed. Reload the page and try again.' });
   const p = PLUGINS.find(x => x.id === (req.body && req.body.plugin));
   if (!p) return res.status(404).json({ error: 'Unknown plugin' });
+  if (!p.file) return res.status(503).json({ error: 'That download is not available right now.' });
   const filePath = path.join(DOWNLOADS_DIR, p.file);
   if (!fs.existsSync(filePath)) return res.status(503).json({ error: 'That download is not available right now.' });
   const raw = crypto.randomBytes(32).toString('hex');

@@ -2,8 +2,9 @@
 
 Public showcase + custom accounts + gated 30-day trial downloads for the
 KSAK Audio Effects Plugin Suite (KSAK-Pre, Simple Delay, Simple Reverb,
-OMEGA EQ, COLOSSUS). Node.js + Express + SQLite (better-sqlite3) — one small
-app, no build step.
+OMEGA EQ, COLOSSUS, KSAK CHRONOS). Node.js + Express + SQLite (better-sqlite3) — one small
+app, no build step. CHRONOS is listed in the showcase; its trial download
+is not available yet (no trial installer exists).
 
 ## Run it locally
 
