@@ -449,7 +449,6 @@ app.get('/', (req, res) => {
       <div class="stat"><b>170</b><span>CHRONOS factory presets</span></div>
       <div class="stat"><b>30</b><span>Day free trials</span></div>
     </div>
-    <img class="heroimg" src="/assets/pre.png" alt="KSAK-Pre plugin interface">
   </section>
   ${chronosFeature}
   <section class="wrap"><div class="grid">${cards}</div></section>

@@ -57,6 +57,7 @@ async function main() {
     check('Signed-out home exposes no /dl/ URL', !home.includes('/dl/'));
     check('Home has zero personal-reference strings', !/kurt|moneyman|stratford|shoot for|johnstown/i.test(home));
     check('Home features the CHRONOS spotlight section', home.includes('id="chronos-feature"') && home.includes('RC-20 meets Effectrix on steroids'));
+    check('Home hero has no duplicate Pre image (Pre face appears once, in its roster card)', (home.match(/\/assets\/pre\.png/g) || []).length === 1 && !home.includes('class="heroimg"'));
     check('Home spotlight + cards link to all 6 plugin pages', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => home.includes(`/plugins/${s}`)));
 
     const PAGES = [
