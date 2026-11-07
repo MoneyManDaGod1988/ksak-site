@@ -8,14 +8,14 @@ const ROOT = path.join(__dirname, '..');
 const TMP = '/tmp/ksak-verify';
 const PORT = 3219;
 const BASE = `http://127.0.0.1:${PORT}`;
-const EXPECTED = { pre: 10259266, colossus: 15731331, chronos: 22951728 };
+const EXPECTED = { pre: 10054657, delay: 11132858, reverb: 6860072, omega: 8779598, colossus: 15752819, chronos: 22951415 };
 const FILES = {
-  pre: '/home/hatch/workspace/goals/ksak-pre-vocal-plugin/files/KSAK-Pre-Setup-v0.3.8-TRIAL.exe',
-  delay: '/home/hatch/workspace/goals/ksak-simple-delay/files/KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe',
-  reverb: '/home/hatch/workspace/goals/ksak-simple-reverb/files/KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe',
-  omega: '/home/hatch/workspace/goals/ksak-omega-eq/files/KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',
-  colossus: '/home/hatch/workspace/goals/ksak-ultimate-compressor/files/KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',
-  chronos: '/home/hatch/workspace/goals/ksak-chronos-plugin/files/KSAK-CHRONOS-Setup-v0.1.0-TRIAL.exe',
+  pre: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Pre-Setup-v0.3.10-TRIAL.exe',
+  delay: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Simple-Delay-Setup-v0.1.8-TRIAL.exe',
+  reverb: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Simple-Reverb-Setup-v0.1.7-TRIAL.exe',
+  omega: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Omega-EQ-Setup-v0.1.11-TRIAL.exe',
+  colossus: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Colossus-Setup-v0.1.7-TRIAL.exe',
+  chronos: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-CHRONOS-Setup-v0.1.1-TRIAL.exe',
 };
 let failures = 0;
 const results = [];
@@ -180,7 +180,7 @@ async function main() {
     const dlpIn = await (await req(member, '/downloads')).text();
     check('Signed-in /downloads unlocks trial buttons (gate preserved), CHRONOS wired like the rest', dlpIn.includes('data-dl="pre"') && dlpIn.includes('name="csrf"') && dlpIn.includes('data-dl="chronos"'));
 
-    for (const pid of ['pre', 'colossus', 'chronos']) {
+    for (const pid of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos']) {
       const linkRes = await req(member, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf }, body: JSON.stringify({ plugin: pid }) });
       const j = await linkRes.json();
       check(`Signed-in link minted for ${pid}`, !!j.url && j.url.startsWith('/dl/'));
