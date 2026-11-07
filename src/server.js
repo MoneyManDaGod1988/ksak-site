@@ -359,10 +359,25 @@ ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
 .cardlink{display:inline-block;margin-top:14px;color:var(--em);text-decoration:none;font-weight:600;font-size:15px}
 .cardlink:hover{color:var(--mint)}
 @media(max-width:760px){.feature{grid-template-columns:1fr}.feature h2{font-size:30px}}
+.carousel{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:linear-gradient(180deg,var(--panel2),var(--panel))}
+.ctrack{display:flex;transition:transform .45s ease}
+.cslide{min-width:100%;padding:0}
+.cslide img{width:100%;display:block}
+.cslide .in{padding:20px 24px 26px}
+.cslide h3{margin:6px 0 2px;font-size:30px}
+.cbtn{position:absolute;top:38%;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(2,10,7,.82);color:var(--text);font-size:22px;cursor:pointer;line-height:1}
+.cbtn:hover{border-color:var(--em);color:var(--mint)}
+.cprev{left:14px}.cnext{right:14px}
+.cdots{display:flex;gap:8px;justify-content:center;padding:0 0 18px}
+.cdot{width:11px;height:11px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);cursor:pointer;padding:0}
+.cdot.on{background:var(--em);border-color:var(--em)}
+.videoframe{aspect-ratio:16/9;border:1.5px dashed #1d5c40;border-radius:18px;background:radial-gradient(700px 320px at 50% 0%,#04241a 0%,rgba(4,36,26,0) 70%),var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
+.videoframe .play{width:74px;height:74px;border-radius:50%;border:2px solid var(--em);color:var(--mint);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 30px rgba(15,224,138,.30)}
+.videoframe h3{margin:6px 0 0;font-size:26px}.videoframe p{color:var(--muted);max-width:520px;margin:0}
 @media(max-width:640px){.hero h1{font-size:36px}.heroemblem{width:150px;height:150px}}
 </style></head><body>
 <header><div class="wrap nav"><a class="brand" href="/"><img class="brandmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><div class="logo">KSAK <span>AUDIO</span></div></a><nav>
-<a href="/">Plugins</a><a href="/#pre">KSAK-Pre</a><a href="/#downloads">Downloads</a>
+<a href="/">Plugins</a><a href="/showcase">Showcase</a><a href="/#pre">KSAK-Pre</a><a href="/#downloads">Downloads</a>
 ${u ? `<a href="/account">My Account</a>${u.role === 'owner' ? '<a href="/owner">Owner</a>' : ''}
 <form method="post" action="/auth/signout" style="display:inline"><input type="hidden" name="_csrf" value="${esc(extraCsrf())}"><button class="btn ghost" type="submit">Sign out</button></form>`
   : `<a href="/auth">Sign in</a><a class="btn" href="/auth?mode=signup">Create account</a>`}
@@ -591,6 +606,63 @@ app.get('/plugins/:slug', (req, res, next) => {
       <a href="/plugins/${prev.slug}">← ${esc(prev.name)}</a>
       <a href="/#downloads">All downloads</a>
       <a href="/plugins/${nxt.slug}">${esc(nxt.name)} →</a>
+    </div>
+  </section>`));
+});
+
+/* ---------- showcase: interactive slides + video ---------- */
+app.get('/showcase', (req, res) => {
+  const slides = PLUGINS.map((p, i) => `
+    <div class="cslide" role="group" aria-label="Slide ${i + 1} of ${PLUGINS.length}: ${esc(p.name)}">
+      <img src="${p.img}" alt="${esc(p.name)} plugin interface" loading="lazy">
+      <div class="in">
+        <div class="tag">${String(i + 1).padStart(2, '0')} · ${esc(p.sub)} · ${p.version}</div>
+        <h3 style="color:${p.accent}">${esc(p.name)}</h3>
+        <p class="hook">${esc(p.hook)}</p>
+        <a class="cardlink" href="/plugins/${p.slug}">Full details →</a>
+      </div>
+    </div>`).join('');
+  const dots = PLUGINS.map((p, i) => `<button class="cdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="Go to ${esc(p.name)}"></button>`).join('');
+  res.send(page('Showcase', `
+  <section class="wrap hero" style="padding-bottom:6px">
+    <h1>The <em>Showcase</em></h1>
+    <p>Six plugins, one suite — flip through the faces, then watch this space for sound.</p>
+  </section>
+  <section class="wrap" style="padding-bottom:10px">
+    <div class="carousel" id="ksakCarousel">
+      <div class="ctrack" id="ksakTrack">${slides}</div>
+      <button class="cbtn cprev" id="ksakPrev" aria-label="Previous plugin">‹</button>
+      <button class="cbtn cnext" id="ksakNext" aria-label="Next plugin">›</button>
+      <div class="cdots">${dots}</div>
+    </div>
+    <p class="muted" style="font-size:13px;margin-top:10px">Use the arrows, the dots, or your keyboard's ← → keys.</p>
+    <script>
+    (function(){
+      var track=document.getElementById('ksakTrack'),slides=track.children.length,i=0,timer=null;
+      var dots=document.querySelectorAll('.cdot');
+      function go(n){i=(n+slides)%slides;track.style.transform='translateX('+(-i*100)+'%)';dots.forEach(function(d,k){d.classList.toggle('on',k===i)});}
+      function auto(){stop();timer=setInterval(function(){go(i+1);},6000);}
+      function stop(){if(timer){clearInterval(timer);timer=null;}}
+      document.getElementById('ksakNext').addEventListener('click',function(){go(i+1);auto();});
+      document.getElementById('ksakPrev').addEventListener('click',function(){go(i-1);auto();});
+      dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.go);auto();});});
+      document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(i+1);auto();}else if(e.key==='ArrowLeft'){go(i-1);auto();}});
+      var c=document.getElementById('ksakCarousel');
+      c.addEventListener('mouseenter',stop);c.addEventListener('mouseleave',auto);
+      c.addEventListener('focusin',stop);c.addEventListener('focusout',auto);
+      auto();
+    })();
+    </script>
+  </section>
+  <section class="wrap blk" id="showcase-video">
+    <h2>Watch</h2>
+    <p class="sub">Sound first: walkthroughs and audio demos for every plugin in the suite.</p>
+    <!-- Video slot: no KSAK product video exists yet. When one is published,
+         drop the YouTube embed iframe in place of the .videoframe block below. -->
+    <div class="videoframe">
+      <div class="play">▶</div>
+      <h3>Showcase videos coming soon</h3>
+      <p>Walkthroughs, preset tours and sound demos for all six plugins are in production. When the first video lands, it plays right here.</p>
     </div>
   </section>`));
 });

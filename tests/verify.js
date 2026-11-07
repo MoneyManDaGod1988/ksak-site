@@ -78,6 +78,13 @@ async function main() {
     const badPage = await req(null, '/plugins/nope');
     check('Unknown plugin slug 404s', badPage.status === 404, `status ${badPage.status}`);
 
+    const showRes = await req(null, '/showcase');
+    const show = await showRes.text();
+    check('Showcase page serves with all 6 plugins in the slides', showRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => show.includes(n)), `status ${showRes.status}`);
+    check('Showcase has working carousel markup + video slot', show.includes('id="ksakCarousel"') && show.includes('id="ksakPrev"') && show.includes('id="ksakNext"') && show.includes('Showcase videos coming soon'));
+    check('Showcase links every slide to its plugin page, no forbidden strings, no /dl/ leak', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => show.includes(`/plugins/${s}`)) && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(show) && !show.includes('/dl/'));
+    check('Nav links to the Showcase page', home.includes('href="/showcase"'));
+
     let allImg = true;
     for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
       const r = await fetch(`${BASE}/assets/${a}.png`); if (!r.ok) allImg = false; await r.arrayBuffer();
