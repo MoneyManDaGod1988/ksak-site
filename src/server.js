@@ -54,12 +54,12 @@ CREATE TABLE IF NOT EXISTS downloads (
 `);
 
 const PLUGINS = [
-  { id: 'pre',      slug: 'ksak-pre',      name: 'KSAK-Pre',        sub: 'Ultimate Channel Strip', version: 'v0.3.10', img: '/assets/pre.png',      accent: '#0fe08a', file: 'KSAK-Pre-Setup-v0.3.10-TRIAL.exe',              size: 10054657, hook: 'The whole vocal chain, in one strip.', chips: ['10 modules', 'Reorderable', 'Per-module presets', 'MIDI Learn'] },
+  { id: 'pre',      slug: 'ksak-pre',      name: 'KSAK-Pre',        sub: 'Ultimate Channel Strip', version: 'v0.3.11', img: '/assets/pre.png',      accent: '#0fe08a', file: 'KSAK-Pre-Setup-v0.3.11-TRIAL.exe',              size: 10056396, hook: 'The whole vocal chain, in one strip.', chips: ['10 modules', 'Reorderable', 'Per-module presets', 'MIDI Learn'] },
   { id: 'delay',    slug: 'simple-delay',  name: 'Simple Delay',    sub: 'The Repeat Deck',        version: 'v0.1.8', img: '/assets/delay.png',    accent: '#4da3ff', file: 'KSAK-Simple-Delay-Setup-v0.1.8-TRIAL.exe',   size: 11132858, hook: 'Tape-style echoes, dialed by feel.', chips: ['Tap Tempo', 'Swing', '5-band EQ', 'Trails', 'Freeze'] },
   { id: 'reverb',   slug: 'simple-reverb', name: 'Simple Reverb',   sub: 'The Vault',              version: 'v0.1.7', img: '/assets/reverb.png',   accent: '#44f7e3', file: 'KSAK-Simple-Reverb-Setup-v0.1.7-TRIAL.exe', size: 6860072,  hook: 'Space you can feel, not fight.', chips: ['Size + Mod', '5-band EQ', 'Spectral meter', 'Freeze'] },
-  { id: 'omega',    slug: 'omega-eq',      name: 'OMEGA EQ',        sub: 'Flagship EQ',            version: 'v0.1.11', img: '/assets/omega.png',    accent: '#b07dff', file: 'KSAK-Omega-EQ-Setup-v0.1.11-TRIAL.exe',       size: 8779598,  hook: 'Every band, every type, zero clutter.', chips: ['7 filter types', '15 local AI assists', 'EXPAND depth'] },
-  { id: 'colossus', slug: 'colossus',      name: 'COLOSSUS',        sub: 'Flagship Compressor',    version: 'v0.1.7', img: '/assets/colossus.png', accent: '#c9ccd4', file: 'KSAK-Colossus-Setup-v0.1.7-TRIAL.exe',       size: 15752819, hook: 'A monument of compression.', chips: ['7 circuits', 'Dual Engine', '8-band Multiband', 'Spectral'] },
-  { id: 'chronos',  slug: 'ksak-chronos',  name: 'KSAK CHRONOS',    sub: 'Flagship FX Sequencer',  version: 'v0.1.1', img: '/assets/chronos.png',  accent: '#2dffc4', file: 'KSAK-CHRONOS-Setup-v0.1.1-TRIAL.exe', size: 22951415, hook: 'RC-20 meets Effectrix on steroids.', chips: ['32-step sequencer', '6 color modules + MAGNET', 'Loop FX engine', 'Pitch + formant shift', '170 factory presets'] },
+  { id: 'omega',    slug: 'omega-eq',      name: 'OMEGA EQ',        sub: 'Flagship EQ',            version: 'v0.1.12', img: '/assets/omega.png',    accent: '#b07dff', file: 'KSAK-Omega-EQ-Setup-v0.1.12-TRIAL.exe',       size: 8864686,  hook: 'Every band, every type, zero clutter.', chips: ['7 filter types', '15 local AI assists', 'EXPAND depth'] },
+  { id: 'colossus', slug: 'colossus',      name: 'COLOSSUS',        sub: 'Flagship Compressor',    version: 'v0.1.8', img: '/assets/colossus.png', accent: '#c9ccd4', file: 'KSAK-Colossus-Setup-v0.1.8-TRIAL.exe',       size: 15759996, hook: 'A monument of compression.', chips: ['7 circuits', 'Dual Engine', '8-band Multiband', 'Spectral'] },
+  { id: 'chronos',  slug: 'ksak-chronos',  name: 'KSAK CHRONOS',    sub: 'Flagship FX Sequencer',  version: 'v0.1.2', img: '/assets/chronos.png',  accent: '#2dffc4', file: 'KSAK-CHRONOS-Setup-v0.1.2-TRIAL.exe', size: 22955266, hook: 'RC-20 meets Effectrix on steroids.', chips: ['32-step sequencer', '6 color modules + MAGNET', 'Loop FX engine', 'Pitch + formant shift', '170 factory presets'] },
 ];
 
 /* In-depth per-plugin page copy. Facts drawn from each plugin's user manual
@@ -216,9 +216,9 @@ const MODULES = [
 ].map(([short, full], i) => ({ n: i + 1, short, full, img: `/assets/module${String(i + 1).padStart(2, '0')}.png` }));
 /* ---------- module explorer data ----------
  * Every plugin's modules/sections, drawn from its delivered manual (the same
- * sources as DETAILS): KSAK-Pre User Manual v0.3.10 booklet; Simple Delay
- * Manual v0.1.8; Simple Reverb Manual v0.1.7; OMEGA EQ Visual Manual v0.1.11;
- * COLOSSUS Manual v0.1.7; KSAK CHRONOS User Manual Ed. 1.3.
+ * sources as DETAILS): KSAK-Pre User Manual v0.3.11 booklet; Simple Delay
+ * Manual v0.1.8; Simple Reverb Manual v0.1.7; OMEGA EQ Visual Manual v0.1.12;
+ * COLOSSUS Manual v0.1.8; KSAK CHRONOS User Manual Ed. 1.4.
  * Visuals are true crops of each plugin's own shipped face (public/assets),
  * or the full face where a section lives in a drawer off the resting face. */
 const EXPLORERS = {
@@ -377,7 +377,7 @@ const EXPLORERS = {
     { slug: 'ai-drawer', full: 'The AI Drawer', img: '/assets/omega.png',
       desc: 'Local AI that proposes and you dispose: Source ID, the Auto-EQ Assistant, Resonance Hunter, Pitch Brain, Text-to-EQ and more. (Full face: the drawer opens from the AI pill.)',
       body: ['Open it with the AI pill. Every model is local analysis — spectral statistics, rule systems and your Style Memory. Nothing leaves the machine; nothing needs an account. The standing law: AI proposes, you dispose — nothing changes your sound until you press ACCEPT.',
-             'The shipped set: Source ID names the source it hears and sets the pitch input type; the Auto-EQ Assistant reads the long-term spectrum and proposes a labelled curve; Resonance Hunter draws narrow dynamic cuts at the resonances the scout hears ringing; Pitch Brain derives Retune/Humanize settings from the performance’s own stability and vibrato; Text-to-EQ turns “warmer, less muddy, more air” into an explained curve; plus AI Timing, the Translation Predictor, the Blind Coach, My Mic & Room Profile and the Session Doctor. All fifteen announced features are in this build in v0.1.11 — AI Harmony Composer (#14) and AI Reference Ghost (#15) shipped in v0.1.11, with their controls in the AI drawer. The Harmony Composer feeds the Harmony Engine from your melody and the detected key, with genre-aware proposals presented in Graph Mode; the Reference Ghost extracts a dropped song’s tonal fingerprint — section-aware — and shows it as a ghost on the graph, with a Match proposal drawn from the difference. AI proposes, you dispose — per the OMEGA manual v0.1.11 §10.'],
+             'The shipped set: Source ID names the source it hears and sets the pitch input type; the Auto-EQ Assistant reads the long-term spectrum and proposes a labelled curve; Resonance Hunter draws narrow dynamic cuts at the resonances the scout hears ringing; Pitch Brain derives Retune/Humanize settings from the performance’s own stability and vibrato; Text-to-EQ turns “warmer, less muddy, more air” into an explained curve; plus AI Timing, the Translation Predictor, the Blind Coach, My Mic & Room Profile and the Session Doctor. All fifteen announced features are in this build — AI Harmony Composer (#14) and AI Reference Ghost (#15) shipped in v0.1.11, with their controls in the AI drawer. The Harmony Composer feeds the Harmony Engine from your melody and the detected key, with genre-aware proposals presented in Graph Mode; the Reference Ghost extracts a dropped song’s tonal fingerprint — section-aware — and shows it as a ghost on the graph, with a Match proposal drawn from the difference. AI proposes, you dispose — per the OMEGA manual v0.1.12 §10.'],
       controls: ['Source ID · Auto-EQ Assistant · Resonance Hunter · Pitch Brain', 'Text-to-EQ · AI Timing · Translation Predictor · Blind Coach', 'My Mic & Room Profile · Session Doctor', 'AI Harmony Composer #14 · AI Reference Ghost #15 — in the AI drawer, new in v0.1.11', 'AI proposes, you dispose — ACCEPT is the only moment anything changes'] },
   ],
   colossus: [
