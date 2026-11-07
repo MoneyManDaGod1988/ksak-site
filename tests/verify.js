@@ -8,13 +8,14 @@ const ROOT = path.join(__dirname, '..');
 const TMP = '/tmp/ksak-verify';
 const PORT = 3219;
 const BASE = `http://127.0.0.1:${PORT}`;
-const EXPECTED = { pre: 10259266, colossus: 15731331 };
+const EXPECTED = { pre: 10259266, colossus: 15731331, chronos: 22951728 };
 const FILES = {
   pre: '/home/hatch/workspace/goals/ksak-pre-vocal-plugin/files/KSAK-Pre-Setup-v0.3.8-TRIAL.exe',
   delay: '/home/hatch/workspace/goals/ksak-simple-delay/files/KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe',
   reverb: '/home/hatch/workspace/goals/ksak-simple-reverb/files/KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe',
   omega: '/home/hatch/workspace/goals/ksak-omega-eq/files/KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',
   colossus: '/home/hatch/workspace/goals/ksak-ultimate-compressor/files/KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',
+  chronos: '/home/hatch/workspace/goals/ksak-chronos-plugin/files/KSAK-CHRONOS-Setup-v0.1.0-TRIAL.exe',
 };
 let failures = 0;
 const results = [];
@@ -76,7 +77,7 @@ async function main() {
       check(`Plugin page ${slug}: no forbidden strings, no /dl/ leak, links across pages`, !/kurt|moneyman|stratford|shoot for|johnstown/i.test(body) && !body.includes('/dl/') && body.includes('/plugins/'));
     }
     const chrPage = await (await req(null, '/plugins/ksak-chronos')).text();
-    check('CHRONOS page keeps Trial coming soon, no download wiring', chrPage.includes('Trial coming soon') && !chrPage.includes('data-dl="chronos"'));
+    check('CHRONOS page offers its 30-Day Trial download (signed-out lock, no coming-soon)', chrPage.includes('30-Day Trial Download') && chrPage.includes('Sign in to download') && !chrPage.includes('Trial coming soon') && !chrPage.includes('data-dl="chronos"'));
     check('Plugin pages carry the shared side rails', chrPage.includes('class="rail rail-l"') && chrPage.includes('class="rail rail-r"'));
     const badPage = await req(null, '/plugins/nope');
     check('Unknown plugin slug 404s', badPage.status === 404, `status ${badPage.status}`);
@@ -107,8 +108,8 @@ async function main() {
       (spot.match(/class="spot"/g) || []).length === 6 && spot.indexOf('KSAK CHRONOS') >= 0 && spot.indexOf('KSAK CHRONOS') < spot.indexOf('KSAK-Pre') && home.includes('id="spotPrev"') && home.includes('id="spotNext"') && home.includes('data-spot="5"') && home.includes('prefers-reduced-motion'));
     check('Spotlight slides carry every plugin teaser + page link',
       ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => spot.includes(`/plugins/${s}`)) && ['whole vocal chain in a single window', 'tape-style echo', 'Five spaces one click apart', '64 fully independent bands', 'Seven circuits, three architectures'].every(t => spot.includes(t)));
-    check('Spotlight CHRONOS slide keeps Trial coming soon, no data-dl wiring',
-      spot.includes('Trial coming soon') && !spot.includes('data-dl="chronos"'));
+    check('Spotlight CHRONOS slide offers the trial like the other five (no coming-soon)',
+      !spot.includes('Trial coming soon') && !spot.includes('data-dl="chronos"') && spot.includes('30-Day Trial'));
 
     // --- No module pages (Kurt correction): the explorer cycles modules in-page only ---
     const modGone1 = await req(null, '/plugins/ksak-pre/modules/loudness');
@@ -130,8 +131,8 @@ async function main() {
       plug.includes('id="ksakCarousel"') && plug.includes('id="ksakTrack"') && plug.includes('id="ksakPrev"') && plug.includes('id="ksakNext"') && (plug.match(/class="cslide"/g) || []).length === 6 && plug.indexOf('id="ksakCarousel"') < plug.indexOf('class="grid"') && !plug.includes('/dl/'));
     const dlpRes = await req(null, '/downloads');
     const dlp = await dlpRes.text();
-    check('/downloads is a dedicated page: six rows, signed-out lock, CHRONOS Trial coming soon, no leaks',
-      dlpRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => dlp.includes(n)) && dlp.includes('Sign in to download') && dlp.includes('Trial coming soon') && !dlp.includes('data-dl') && !dlp.includes('/dl/') && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(dlp), `status ${dlpRes.status}`);
+    check('/downloads is a dedicated page: six rows, signed-out lock on all six trials, no leaks',
+      dlpRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => dlp.includes(n)) && dlp.includes('Sign in to download') && !dlp.includes('Trial coming soon') && !dlp.includes('data-dl') && !dlp.includes('/dl/') && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(dlp), `status ${dlpRes.status}`);
     const compRes = await req(null, '/company');
     const comp = await compRes.text();
     check('/company is a dedicated page: brand, tagline, six-product suite with links, documented commitments',
@@ -177,9 +178,9 @@ async function main() {
     check('Nav (signed-in) tabs: Plugins/Downloads/Company/My Account — no Showcase or KSAK-Pre tabs',
       acctNav.includes('href="/plugins"') && acctNav.includes('href="/downloads"') && acctNav.includes('href="/company"') && acctNav.includes('href="/account"') && !acctNav.includes('href="/showcase"') && !acctNav.includes('>KSAK-Pre<'));
     const dlpIn = await (await req(member, '/downloads')).text();
-    check('Signed-in /downloads unlocks trial buttons (gate preserved), CHRONOS still unwired', dlpIn.includes('data-dl="pre"') && dlpIn.includes('name="csrf"') && !dlpIn.includes('data-dl="chronos"'));
+    check('Signed-in /downloads unlocks trial buttons (gate preserved), CHRONOS wired like the rest', dlpIn.includes('data-dl="pre"') && dlpIn.includes('name="csrf"') && dlpIn.includes('data-dl="chronos"'));
 
-    for (const pid of ['pre', 'colossus']) {
+    for (const pid of ['pre', 'colossus', 'chronos']) {
       const linkRes = await req(member, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf }, body: JSON.stringify({ plugin: pid }) });
       const j = await linkRes.json();
       check(`Signed-in link minted for ${pid}`, !!j.url && j.url.startsWith('/dl/'));
@@ -188,9 +189,9 @@ async function main() {
       check(`Signed-in download of ${pid} is byte-exact`, dl.status === 200 && buf.byteLength === EXPECTED[pid], `${buf.byteLength} B vs expected ${EXPECTED[pid]} B`);
     }
 
-    const chrRes = await req(member, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf }, body: JSON.stringify({ plugin: 'chronos' }) });
-    const chrBody = await chrRes.text();
-    check('CHRONOS has no trial download yet (503, no URL)', chrRes.status === 503 && !chrBody.includes('/dl/'), `status ${chrRes.status}`);
+    const chrAnon = await req(null, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plugin: 'chronos' }) });
+    const chrAnonBody = await chrAnon.text();
+    check('Signed-out CHRONOS download attempt blocked (401, no URL)', chrAnon.status === 401 && !chrAnonBody.includes('/dl/'), `status ${chrAnon.status}`);
 
     const ownerView = await (await req(owner, '/owner')).text();
     check('Owner view lists both accounts', ownerView.includes('owner@example.test') && ownerView.includes('member@example.test'));
