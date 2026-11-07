@@ -292,6 +292,14 @@ function authRateLimit(req, res, next) {
 }
 
 /* ---------- layout ---------- */
+/* Decorative side rails: fill the wide-screen margins beside the centered
+ * column. Pure CSS/art dressing — pointer-events off, aria-hidden, and
+ * display:none below 1280px so phones keep the single-column layout. */
+function sideRails() {
+  const faces = PLUGINS.map(p => `<img src="${p.img}" alt="" loading="lazy">`).join('');
+  return `<div class="rail rail-l" aria-hidden="true"><div class="glow"></div><img class="rail-emblem" src="/img/ksak-emblem.png" alt=""><div class="rail-text">KSAK Audio · Effects Plugin Suite</div></div>
+<div class="rail rail-r" aria-hidden="true"><div class="glow"></div><div class="rail-faces">${faces}</div><img class="rail-emblem" src="/img/ksak-emblem.png" alt=""><div class="rail-text">VST3 · Windows · 30-Day Trials</div></div>`;
+}
 function page(title, body, extra = '') {
   const u = extraUser();
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -375,7 +383,26 @@ ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
 .videoframe .play{width:74px;height:74px;border-radius:50%;border:2px solid var(--em);color:var(--mint);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 30px rgba(15,224,138,.30)}
 .videoframe h3{margin:6px 0 0;font-size:26px}.videoframe p{color:var(--muted);max-width:520px;margin:0}
 @media(max-width:640px){.hero h1{font-size:36px}.heroemblem{width:150px;height:150px}}
+.rail{position:fixed;top:0;bottom:0;width:calc((100vw - 1160px)/2);z-index:0;pointer-events:none;overflow:hidden;display:none}
+.rail-l{left:0}.rail-r{right:0}
+.rail::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(15,224,138,.13) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5}
+.rail::after{content:'';position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,rgba(15,224,138,0) 0%,rgba(15,224,138,.38) 30%,rgba(45,255,196,.38) 70%,rgba(15,224,138,0) 100%)}
+.rail-l::after{right:0}.rail-r::after{left:0}
+.rail .glow{position:absolute;left:50%;top:32%;width:340px;height:340px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(15,224,138,.13),rgba(15,224,138,0) 72%)}
+.rail-r .glow{top:auto;bottom:4%;transform:translate(-50%,0)}
+.rail-emblem{position:absolute;left:50%;transform:translateX(-50%);width:min(320px,86%);opacity:.08;display:none}
+.rail-l .rail-emblem{top:12%}
+.rail-r .rail-emblem{bottom:4%}
+.rail-text{position:absolute;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;letter-spacing:.42em;font-size:11px;font-weight:700;text-transform:uppercase;color:rgba(45,255,196,.34);white-space:nowrap}
+.rail-l .rail-text{right:16px}
+.rail-r .rail-text{left:16px;transform:translateY(-50%) rotate(180deg)}
+.rail-faces{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;flex-direction:column;gap:12px;align-items:center;width:100%}
+.rail-faces img{width:min(132px,72%);border:1px solid var(--line);border-radius:10px;opacity:.55;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+@media(min-width:1280px){.rail{display:block}}
+@media(min-width:1560px){.rail-faces{display:flex}}
+@media(min-width:1760px){.rail-emblem{display:block}}
 </style></head><body>
+${sideRails()}
 <header><div class="wrap nav"><a class="brand" href="/"><img class="brandmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><div class="logo">KSAK <span>AUDIO</span></div></a><nav>
 <a href="/">Plugins</a><a href="/showcase">Showcase</a><a href="/#pre">KSAK-Pre</a><a href="/#downloads">Downloads</a>
 ${u ? `<a href="/account">My Account</a>${u.role === 'owner' ? '<a href="/owner">Owner</a>' : ''}

@@ -57,7 +57,8 @@ async function main() {
     check('Signed-out home exposes no /dl/ URL', !home.includes('/dl/'));
     check('Home has zero personal-reference strings', !/kurt|moneyman|stratford|shoot for|johnstown/i.test(home));
     check('Home features the CHRONOS spotlight section', home.includes('id="chronos-feature"') && home.includes('RC-20 meets Effectrix on steroids'));
-    check('Home hero has no duplicate Pre image (Pre face appears once, in its roster card)', (home.match(/\/assets\/pre\.png/g) || []).length === 1 && !home.includes('class="heroimg"'));
+    check('Home hero has no duplicate Pre image (Pre face appears once, in its roster card)', (home.match(/<img src="\/assets\/pre\.png" alt="KSAK-Pre plugin interface"/g) || []).length === 1 && !home.includes('class="heroimg"'));
+    check('Shared layout carries side rails + wide-screen breakpoints (hidden on phones)', home.includes('class="rail rail-l"') && home.includes('class="rail rail-r"') && home.includes('@media(min-width:1280px)') && home.includes('@media(min-width:1560px)') && home.includes('@media(min-width:1760px)') && home.includes('overflow:hidden;display:none'));
     check('Home spotlight + cards link to all 6 plugin pages', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => home.includes(`/plugins/${s}`)));
 
     const PAGES = [
@@ -76,6 +77,7 @@ async function main() {
     }
     const chrPage = await (await req(null, '/plugins/ksak-chronos')).text();
     check('CHRONOS page keeps Trial coming soon, no download wiring', chrPage.includes('Trial coming soon') && !chrPage.includes('data-dl="chronos"'));
+    check('Plugin pages carry the shared side rails', chrPage.includes('class="rail rail-l"') && chrPage.includes('class="rail rail-r"'));
     const badPage = await req(null, '/plugins/nope');
     check('Unknown plugin slug 404s', badPage.status === 404, `status ${badPage.status}`);
 
