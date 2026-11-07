@@ -56,6 +56,27 @@ async function main() {
     check('Showcase lists all 6 plugins', ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'CHRONOS'].every(n => home.includes(n)));
     check('Signed-out home exposes no /dl/ URL', !home.includes('/dl/'));
     check('Home has zero personal-reference strings', !/kurt|moneyman|stratford|shoot for|johnstown/i.test(home));
+    check('Home features the CHRONOS spotlight section', home.includes('id="chronos-feature"') && home.includes('RC-20 meets Effectrix on steroids'));
+    check('Home spotlight + cards link to all 6 plugin pages', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => home.includes(`/plugins/${s}`)));
+
+    const PAGES = [
+      ['ksak-pre', 'KSAK-Pre', 'whole vocal chain'],
+      ['simple-delay', 'Simple Delay', 'slapback voice'],
+      ['simple-reverb', 'Simple Reverb', 'five spaces one click apart'],
+      ['omega-eq', 'OMEGA EQ', '64 fully independent bands'],
+      ['colossus', 'COLOSSUS', 'Seven circuits'],
+      ['ksak-chronos', 'KSAK CHRONOS', 'MAGNET clock'],
+    ];
+    for (const [slug, name, marker] of PAGES) {
+      const pr = await req(null, `/plugins/${slug}`);
+      const body = await pr.text();
+      check(`Plugin page /plugins/${slug} serves with name + bio`, pr.status === 200 && body.includes(name) && body.includes(marker), `status ${pr.status}`);
+      check(`Plugin page ${slug}: no forbidden strings, no /dl/ leak, links across pages`, !/kurt|moneyman|stratford|shoot for|johnstown/i.test(body) && !body.includes('/dl/') && body.includes('/plugins/'));
+    }
+    const chrPage = await (await req(null, '/plugins/ksak-chronos')).text();
+    check('CHRONOS page keeps Trial coming soon, no download wiring', chrPage.includes('Trial coming soon') && !chrPage.includes('data-dl="chronos"'));
+    const badPage = await req(null, '/plugins/nope');
+    check('Unknown plugin slug 404s', badPage.status === 404, `status ${badPage.status}`);
 
     let allImg = true;
     for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {

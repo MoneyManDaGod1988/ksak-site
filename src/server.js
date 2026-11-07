@@ -54,13 +54,156 @@ CREATE TABLE IF NOT EXISTS downloads (
 `);
 
 const PLUGINS = [
-  { id: 'pre',      name: 'KSAK-Pre',        sub: 'Ultimate Channel Strip', version: 'v0.3.8', img: '/assets/pre.png',      accent: '#0fe08a', file: 'KSAK-Pre-Setup-v0.3.8-TRIAL.exe',              size: 10259266, hook: 'The whole vocal chain, in one strip.', chips: ['10 modules', 'Reorderable', 'Per-module presets', 'MIDI Learn'] },
-  { id: 'delay',    name: 'Simple Delay',    sub: 'The Repeat Deck',        version: 'v0.1.6', img: '/assets/delay.png',    accent: '#4da3ff', file: 'KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe',   size: 12522153, hook: 'Tape-style echoes, dialed by feel.', chips: ['Tap Tempo', 'Swing', '5-band EQ', 'Trails', 'Freeze'] },
-  { id: 'reverb',   name: 'Simple Reverb',   sub: 'The Vault',              version: 'v0.1.5', img: '/assets/reverb.png',   accent: '#44f7e3', file: 'KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe', size: 6700004,  hook: 'Space you can feel, not fight.', chips: ['Size + Mod', '5-band EQ', 'Spectral meter', 'Freeze'] },
-  { id: 'omega',    name: 'OMEGA EQ',        sub: 'Flagship EQ',            version: 'v0.1.4', img: '/assets/omega.png',    accent: '#b07dff', file: 'KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',       size: 6198141,  hook: 'Every band, every type, zero clutter.', chips: ['7 filter types', '15 local AI assists', 'EXPAND depth'] },
-  { id: 'colossus', name: 'COLOSSUS',        sub: 'Flagship Compressor',    version: 'v0.1.3', img: '/assets/colossus.png', accent: '#c9ccd4', file: 'KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',       size: 15731331, hook: 'A monument of compression.', chips: ['7 circuits', 'Dual Engine', '8-band Multiband', 'Spectral'] },
-  { id: 'chronos',  name: 'KSAK CHRONOS',    sub: 'Flagship FX Sequencer',  version: 'v0.1.0', img: '/assets/chronos.png',  accent: '#2dffc4', trial: false, file: null, size: 0, hook: 'RC-20 meets Effectrix on steroids.', chips: ['32-step sequencer', '6 color modules + MAGNET', 'Loop FX engine', 'Pitch + formant shift', '170 factory presets'] },
+  { id: 'pre',      slug: 'ksak-pre',      name: 'KSAK-Pre',        sub: 'Ultimate Channel Strip', version: 'v0.3.8', img: '/assets/pre.png',      accent: '#0fe08a', file: 'KSAK-Pre-Setup-v0.3.8-TRIAL.exe',              size: 10259266, hook: 'The whole vocal chain, in one strip.', chips: ['10 modules', 'Reorderable', 'Per-module presets', 'MIDI Learn'] },
+  { id: 'delay',    slug: 'simple-delay',  name: 'Simple Delay',    sub: 'The Repeat Deck',        version: 'v0.1.6', img: '/assets/delay.png',    accent: '#4da3ff', file: 'KSAK-Simple-Delay-Setup-v0.1.6-TRIAL.exe',   size: 12522153, hook: 'Tape-style echoes, dialed by feel.', chips: ['Tap Tempo', 'Swing', '5-band EQ', 'Trails', 'Freeze'] },
+  { id: 'reverb',   slug: 'simple-reverb', name: 'Simple Reverb',   sub: 'The Vault',              version: 'v0.1.5', img: '/assets/reverb.png',   accent: '#44f7e3', file: 'KSAK-Simple-Reverb-Setup-v0.1.5-TRIAL.exe', size: 6700004,  hook: 'Space you can feel, not fight.', chips: ['Size + Mod', '5-band EQ', 'Spectral meter', 'Freeze'] },
+  { id: 'omega',    slug: 'omega-eq',      name: 'OMEGA EQ',        sub: 'Flagship EQ',            version: 'v0.1.4', img: '/assets/omega.png',    accent: '#b07dff', file: 'KSAK-Omega-EQ-Setup-v0.1.4-TRIAL.exe',       size: 6198141,  hook: 'Every band, every type, zero clutter.', chips: ['7 filter types', '15 local AI assists', 'EXPAND depth'] },
+  { id: 'colossus', slug: 'colossus',      name: 'COLOSSUS',        sub: 'Flagship Compressor',    version: 'v0.1.3', img: '/assets/colossus.png', accent: '#c9ccd4', file: 'KSAK-Colossus-Setup-v0.1.3-TRIAL.exe',       size: 15731331, hook: 'A monument of compression.', chips: ['7 circuits', 'Dual Engine', '8-band Multiband', 'Spectral'] },
+  { id: 'chronos',  slug: 'ksak-chronos',  name: 'KSAK CHRONOS',    sub: 'Flagship FX Sequencer',  version: 'v0.1.0', img: '/assets/chronos.png',  accent: '#2dffc4', trial: false, file: null, size: 0, hook: 'RC-20 meets Effectrix on steroids.', chips: ['32-step sequencer', '6 color modules + MAGNET', 'Loop FX engine', 'Pitch + formant shift', '170 factory presets'] },
 ];
+
+/* In-depth per-plugin page copy. Facts drawn from each plugin's user manual
+ * and the suite canon — nothing here is claimed that the manuals do not state. */
+const DETAILS = {
+  pre: {
+    bio: [
+      'KSAK-Pre is the whole vocal chain in a single window: noise gate, drive preamp, vocal compressor, dynamic EQ, multiband, tone shaper, glue compressor, stereo imager, limiter and loudness metering — ten modules that each do the job of a classic studio unit, rebuilt as KSAK Audio originals. Mono and stereo, 44.1–192 kHz.',
+      'Every module is modeled control-for-control on a classic unit engineers already trust — every knob, switch, range and taper mirrors the original, and the detectors, timing, knees and saturation character are measured against it, then level-matched A/B\u2019d on real material. Where a difference remains, it is documented, never hidden.',
+      'The chain is yours to arrange. Drag modules into any order, save per-module presets, and drive the controls from your controller with MIDI Learn. The modules listen to each other through the sidechain, so the chain behaves like a chain — not ten separate plugins pretending to be one.',
+      'And it starts honest. A fresh load is UNITY — START CLEAN: every module at neutral, audio passing bit-identical to bypass. The limiter\u2019s lookahead is reported to your DAW, which compensates for it. Flip the header BYPASS or A/B against UNITY any time: if it doesn\u2019t sound better, it isn\u2019t better.',
+    ],
+    features: [
+      '10 modules: Noise Gate · Drive Preamp · Vocal Comp · Dynamic EQ · Multiband · Tone Shaper · Glue Comp · Stereo Imager · Limiter · Loudness',
+      'Fully reorderable chain — drag modules into any order',
+      'Per-module presets, plus the full factory library',
+      'MIDI Learn on the controls',
+      'Sidechain interaction between modules',
+      'Dynamic EQ: first and last bands carry all seven filter types',
+      'True-peak limiter with lookahead and dither',
+      'Loudness metering built in — the last module, on purpose',
+      'Fresh load is bit-identical to bypass (UNITY — START CLEAN)',
+      'Low CPU by design: a module that is off costs nothing — its processing sleeps entirely',
+    ],
+  },
+  delay: {
+    bio: [
+      'Simple Delay — The Repeat Deck — is a tape-style echo built around one rule: \u201csimple\u201d means simple to use, not simple in power. Every control starts at a true neutral position, so what you hear after you turn a knob is exactly what that knob did. A fresh load is UNITY — START CLEAN: what goes in comes out unchanged, sample for sample.',
+      'Five characters cover the echo vocabulary. SLAP is a tight slapback voice with its own feedback character, so a slap stays a slap — one tight bounce and a short tail. DIGITAL is pristine, full-bandwidth repeats. TAPE darkens and gently saturates each pass. ANALOG is bucket-brigade darkness with a lifted low end. PING-PONG bounces the repeats left–right across the stereo field.',
+      'Timing runs free from 1 ms to 2 seconds, or locks to your song — quarter, dotted eighth, eighth, triplet — with Tap Tempo for when the host has no tempo to give. Swing pushes every second repeat later until straight echoes become a shuffle. DUCK dips the repeats under the dry signal so they never talk over the vocal, and FREEZE captures the loop and holds it while you play over the top.',
+      'The bottom strip is tone: a full 5-band EQ that shapes the repeats only. The dry signal is never touched, and each repeat is EQ\u2019d once, so turning a band up does not compound from repeat to repeat. The twin reels turn while audio plays, and the timeline shows the repeat pattern and the spectrum of the wet signal.',
+    ],
+    features: [
+      '5 modes: SLAP · DIGITAL · TAPE · ANALOG · PING-PONG — each with its own character',
+      'Free time 1 ms – 2 s, or tempo sync: 1/4 · dotted 1/8 · 1/8 · triplet',
+      'Tap Tempo (a reported host tempo wins; tapped tempo otherwise)',
+      'Feedback · Tone · Swing · Width · Mix knobs',
+      'MIX LOCK — loading presets changes everything except your mix balance',
+      'DUCK — repeats dip under the dry signal automatically',
+      'FREEZE — capture the loop and play over it',
+      '5-band EQ on the repeats only: draggable graph, per-band bypass',
+      'Bands 1 and 5 carry all seven filter types (Bell, shelves, passes, Notch, Band Pass)',
+      'TRAILS — tails ring out after bypass; wet-path pan and output trim',
+      '23 factory presets; unlimited user presets',
+      'Whole-face scaling 50%–200% — every control visible at the default size',
+    ],
+  },
+  reverb: {
+    bio: [
+      'Simple Reverb — The Vault — holds five spaces one click apart: ROOM, PLATE, HALL, CHAMBER and SPACE. Their characters are measured, not just named: Room is tight and present, the shortest reflections of the five; Plate is bright and dense, the classic vocal and snare plate; Hall is the big public space with a longer decay than the knob reads; Chamber is small, dark and intimate; Space is the vast one, where the tail becomes part of the music.',
+      'Nine gold knobs run the space. DECAY sets how long the tail takes to fall into silence — 0.1 to 30 seconds. PRE-DELAY opens a gap so the dry sound stays clear while the space blooms behind it. SIZE is the physical size of the room, independent of decay: decay is how long, size is how big. TONE tilts the tank\u2019s filters, MOD keeps gentle movement inside the tail so long notes feel like they are moving through weather, and WIDTH widens the wet signal only.',
+      'DUCK dips the tail while the dry signal is loud and lets it bloom back in the gaps — the reverb that never talks over the vocal. FREEZE stops new audio entering the tank and holds the current space in the air while you play over it. The framed pan section places each side of the wet signal independently, and TRAILS decides what bypass does to the tail.',
+      'Shaping happens in two layers, both on the wet path only — the dry signal is never touched. Input high-pass and low-pass filters decide what enters the tank, and a 5-band EQ with a draggable graph shapes the finished tail. While it sounds, the Vault display draws the live spectrum and the tail\u2019s decay curve. A fresh load is UNITY — START CLEAN.',
+    ],
+    features: [
+      '5 algorithms: ROOM · PLATE · HALL · CHAMBER · SPACE',
+      'Decay 0.1–30 s · Pre-Delay 0–250 ms (honoured in full at 96/192 kHz) · Size independent of Decay',
+      'Tone · Mod · Width (wet signal only) · Mix, with MIX LOCK that stays locked across preset loads',
+      'DUCK — the tail dips under the dry signal automatically',
+      'FREEZE — hold the space and play over it',
+      'Input high-pass (20 Hz – 1 kHz) and low-pass (1–20 kHz) filters on the tank input',
+      '5-band EQ on the tail only: draggable graph, per-band bypass, full filter set on bands 1 and 5',
+      'Dual pan section: left and right wet pans independent, plus output trim',
+      'TRAILS — tails ring out after bypass',
+      'Live Vault display: wet spectrum + tail decay curve',
+      '23 factory presets; unlimited user presets',
+      'Whole-face scaling 50%–200% — every control visible at the default size',
+    ],
+  },
+  omega: {
+    bio: [
+      'OMEGA EQ is the flagship equalizer: 64 fully independent bands, and every band carries all 17 filter types — Bell, Low Shelf, High Shelf, Low Pass, High Pass, Notch, Band Pass, Tilt Shelf, Flat Tilt, Flat Top, the razor Sword bell, All-Pass, resonant passes, steep passes and Brick Cut. The curves are drawn from the same mathematics that processes the audio, so what you see is literally what you get, right up to Nyquist, with no high-frequency cramping.',
+      'Each band can wear one of nine vintage curve characters — exact Digital, Pultec, API, Neve, SSL, Tube, British Console, American Console or Passive — with a Character knob blending in soft saturation on that band\u2019s contribution only. And each band picks its own mode: Static; Dynamic, a full gain computer per band with threshold, range, knee, attack, release, lookahead and a relative-threshold mode; or Spectral, cutting only the FFT bins that poke above the band\u2019s own average.',
+      'Then OMEGA goes where equalizers don\u2019t. A full Pitch Engine hears monophonic sources and corrects them to a key and scale — Retune, Flex-Tune, Humanize, formant preserve and shift, Auto-Key, MIDI Target, and a graph mode where a captured take becomes note blocks you drag on a piano roll. The Harmony drawer runs three harmony voices off the corrected lead, each with its own interval, level, formant, pan, width and EQ, alongside the Double Maker, De-Plosive and Breath Control.',
+      'A local AI drawer proposes and you dispose: Source ID, the Auto-EQ Assistant, Resonance Hunter, Pitch Brain, Text-to-EQ, the Session Doctor and more — nothing changes your sound until you press ACCEPT, and every model runs on your machine. God View draws every OMEGA in the session on one screen and flags where instances pile up. Two laws run the house: AI proposes, you dispose — and power off is truly off, audio untouched at zero CPU.',
+    ],
+    features: [
+      '64 independent bands (32/64 view; bands 33–64 hold in memory when hidden)',
+      'All 17 filter types on every band — passes follow the Butterworth law, −3.01 dB at the cutoff, slopes 6–48 dB/oct',
+      '9 vintage curve models per band + per-band Character saturation',
+      'Per-band modes: Static · Dynamic (full gain computer, relative threshold, bidirectional) · Spectral',
+      'Transient/Sustain split; per-band LFO or envelope motion on gain or frequency',
+      'Per-band channels: Stereo · Mid · Side · Left · Right, with Field L/R and Field M/S rotation',
+      'Pitch Engine: correction to key/scale, Auto-Key, MIDI Target, graph-mode note editing, Hum-to-Band',
+      'Harmony drawer: 3 voices with per-voice EQ; Double Maker · De-Plosive · Breath Control · Vocal God Mode',
+      'Local AI: Source ID · Auto-EQ Assistant · Resonance Hunter · Pitch Brain · Text-to-EQ · AI Timing · Translation Predictor · Blind Coach · Session Doctor',
+      'Delta audition (global or per-band) · Loudness Match (BS.1770) · God Guard true-peak ceiling · Auto Gain · Gain Scale',
+      'God View + Ecosystem Link across instances; Style Memory — local, visible, erasable in one press',
+      'Masking Slayer · Layer EQ · Codec Audition · 4 macros (AIR / WARMTH / PRESENCE / GLUE)',
+      'Per-band presets; headphone correction curves on bands 61–64',
+      '8 colour themes; whole-face scaling 50%–200%',
+    ],
+  },
+  colossus: {
+    bio: [
+      'KSAK COLOSSUS is the flagship compressor of the suite — the dynamics pair to OMEGA EQ. One instance holds the chain you would normally build from three or four separate plugins, under one preset and one undo history. And the face is a colossus: a monumental statue composition in Imperial Bronze, built flat to the glass, where every part of the statue does a job — the transfer curve lives in its chest, the gain-reduction columns stand at the pedestal\u2019s edge.',
+      'Seven circuits, each a way of hearing level and reacting to it. CLEAN is transparent and precise, control without a fingerprint. BUS is RMS-leaning glue in the SSL G-Bus tradition. FET is the fast, forward 1176 character. OPTO rides a performance with the LA-2A\u2019s smooth, program-dependent release. VARI-MU is slow, rich glue whose ratio itself grows as the signal gets louder. VCA PUNCH pushes the middle of the sound at you, tight and controlled. CHAMELEON is the Distressor\u2019s range — extended ratios including NUKE, and the hottest saturation of the seven. Every circuit carries its own Character saturation: per circuit, never forced.',
+      'Three architectures run those circuits: Classic; Multiband, with up to 8 bands; and Spectral. The Dual Engine stacks two full engines in one instance — in series, FET into OPTO is the classic vocal chain, or in parallel — with downward and upward compression and a transient/sustain split to aim the work where it belongs.',
+      'When the AI has a move to suggest, it draws a dashed ghost curve over your transfer curve with plain-word labels and ACCEPT / REJECT pills — nothing changes until you accept. A fresh load is neutral, identical to bypass; with power off, the engine is not called at all. Free updates for life, per license.',
+    ],
+    features: [
+      '7 circuits: CLEAN · BUS · FET · OPTO · VARI-MU · VCA PUNCH · CHAMELEON — measured pairwise distinct',
+      'Per-circuit Character / Saturation, from clean to driven — never forced',
+      '3 architectures: Classic · Multiband (up to 8 bands) · Spectral',
+      'Dual Engine: two full engines in series (A → B) or parallel (A + B), with LINK',
+      'Ratio from below 1:1 expansion through gentle control to 100:1 and Limit behaviour',
+      'Threshold · Attack · Release · Knee · Make-Up · Mix · Range — the knee point is grabbable on the graph',
+      'Upward and downward compression; transient/sustain split',
+      'Focused vocal tools, sidechain with detector EQ, Motion, and macros',
+      'Local AI proposal features in plain words — accept, adjust or reject; proposals appear as ghost curves',
+      'MATCH loudness-matched compare; preset morphing; God View',
+      'Quality modes: ECO · STD · GOD',
+      'Whole-face scaling 50%–200% — every control visible at the default size',
+    ],
+  },
+  chronos: {
+    teaser: 'The flagship of the suite: a retro-color engine and a 32-step effect sequencer on one game board — pitch correction, a loop lab, a Tone EQ strip and a local AI that proposes while you dispose. Paint effects onto steps, chain patterns from verse to hook to drop, and let MAGNET age the sound — and the face itself — as you turn it up.',
+    bio: [
+      'KSAK CHRONOS is the flagship FX sequencer — RC-20 meets Effectrix on steroids. A retro-color engine, a 32-step effect sequencer, pitch correction, a loop lab and a local AI, all on one game board in KSAK Emerald. A fresh load is UNITY — START CLEAN: the board is empty and the audio passes bit-identical until you change it.',
+      'The left deck is colour: six modules — Noise, Wobble, Distort, Digital, Space and Magnetic — under one master, the MAGNET clock. Turn MAGNET up and the sound is not the only thing that ages: the face itself takes on a seeded patina — fine grain, micro-scratches and recess grime in the Emerald family only — while the clock dial stays pristine and every glyph stays legible. It is display only; the audio never knows.',
+      'The centre board is time: 32 steps × 9 lanes — Stutter, Reverse, Scratch, Tape-Stop, X-Loop, Gate, Half-Time, Filter and Pitch — plus a lane per color module. Paint how hard each step hits, set per-step probability so steps fire only sometimes, give each lane its own length and swing for polyrhythm, freeze a lane, and chain the eight pattern pads A–H from verse to hook to drop. Vocal Mode and Drum Mode retune the whole board\u2019s feel for the source in front of it.',
+      'The right rail is pitch and loops. The Pitch block tunes to 440, 432 or 444 Hz plus cents, auto-detects note and key, and corrects in Natural or Hard Tune mode with formant preserve — and formant shift that moves the body of the voice on purpose. The Loop FX engine captures a beat or whole bars, slices them onto the 32 steps for reorder, mute, reverse and pitch per slice, and lets you tune and colour the loop separately from the dry.',
+      'Under the board sits a Tone EQ strip — high-pass and low-pass knobs with 12/24/48 dB slope selectors, and three bell bands whose shape switches between Bell, Low Shelf, High Shelf and Notch, with a live curve drawn from the true combined response. A dual Quantizer keeps time and pitch honest. The local AI proposes ghost patterns — Pattern Builder, Loop Finder, Pitch Brain, Text-to-FX and more — and your sound does not change until you press ACCEPT. CHRONOS ships with 170 factory presets across nine categories, plus over 100 pattern presets.',
+    ],
+    features: [
+      'Color engine: Noise · Wobble · Distort · Digital · Space · Magnetic, under the MAGNET master clock',
+      'MAGNET aging: the face patinas as MAGNET rises — display only, dial stays pristine',
+      '32-step sequencer: 9 FX lanes (Stutter · Reverse · Scratch · Tape-Stop · X-Loop · Gate · Half-Time · Filter · Pitch) plus a lane per color module',
+      'Per-step amount · per-step probability · per-lane length and swing · Freeze lane',
+      'Pattern pads A–H with chaining; 100+ pattern presets',
+      'Vocal Mode and Drum Mode lane tunings',
+      'Pitch block: tuning 440/432/444 Hz + cents, auto-detect note/key, Natural + Hard Tune correction, formant preserve and per-step formant shift, sequenced pitch lane (−12/+12 semitones)',
+      'Loop FX engine: quantized or free capture (1 beat to 8 bars), Reverse, Ping-Pong, Half/Double speed, Slice onto the steps, Freeze/Hold, Overdub + Undo, MIDI retrigger, drag-out WAV',
+      'FX batch: granular chop, buffer shuffle, slip and stretch, shimmer/reverse/gated/spring/plate reverb, spectral freeze and blur, chorus/flanger/phaser/tremolo, DJ filter, multiband distortion, wavefold, bitcrush, width and pump sequencers',
+      'Tone EQ strip: HP + LP with slope selectors, 3 shape-switching bands, live true-response curve',
+      'Dual Quantizer: Time (grid, strength, swing/groove) + Pitch (key/scale lock, glide)',
+      'Local AI: Pattern Builder · Source ID · Loop Finder · Pitch Brain · Fill & Transition Builder · Text-to-FX · Smart Randomizer · Clean-Up · Style Memory — AI proposes, you dispose',
+      'XY Morph pad + 8 macros; reorderable FX chain',
+      '170 factory presets: Vocals 25 · Drums 20 · Melody/Keys 20 · Loops/Samples 20 · Transitions & Fills 20 · Extreme/Sound Design 20 · Guitar 15 · Bass 15 · Full Beat/Mix Bus 15',
+      'Zero-Latency tracking mode · high-quality oversampling mode · Eco CPU mode · on-face CPU meter',
+      'Whole-face scaling 50%–200% — every control visible at the default size',
+    ],
+  },
+};
 const MODULES = [
   ['Gate', 'Noise Gate'], ['Drive', 'Drive Preamp'], ['Comp', 'Vocal Comp'], ['Dyn EQ', 'Dynamic EQ'],
   ['Multi', 'Multiband'], ['Tone', 'Tone Shaper'], ['Glue', 'Glue Comp'], ['Image', 'Stereo Imager'],
@@ -197,6 +340,25 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 .dlrow{display:flex;gap:14px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:10px 0;flex-wrap:wrap;transition:border-color .15s,box-shadow .15s}
 .dlrow:hover{border-color:rgba(15,224,138,.4);box-shadow:0 0 20px rgba(15,224,138,.10)}
 .muted{color:var(--muted)}footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px;margin-top:30px}
+.feature{display:grid;grid-template-columns:1.25fr 1fr;gap:30px;align-items:center;background:linear-gradient(180deg,#07271a,var(--panel));border:1px solid rgba(45,255,196,.45);border-radius:20px;padding:26px;margin:34px 0 6px;box-shadow:0 0 46px rgba(45,255,196,.16)}
+.feature img{width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+.feature h2{font-size:40px;margin:6px 0 4px;color:var(--mint)}
+.feature .hook{font-size:19px;color:var(--text);margin:0 0 10px}
+.feature p{color:var(--muted);margin:0 0 16px}
+.feature .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.pnav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.pnav a{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--muted);text-decoration:none}
+.pnav a:hover{color:var(--text);border-color:var(--em)}
+.pnav a.on{color:#02130a;background:var(--em);border-color:var(--em);font-weight:700}
+.bio p{color:#c8d6cd;max-width:780px;font-size:17px;margin:0 0 16px}
+ul.feat{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px 26px}
+ul.feat li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;color:#c8d6cd;font-size:15px}
+ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
+.prevnext{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:34px}
+.prevnext a{color:var(--muted);text-decoration:none;font-size:15px}.prevnext a:hover{color:var(--text)}
+.cardlink{display:inline-block;margin-top:14px;color:var(--em);text-decoration:none;font-weight:600;font-size:15px}
+.cardlink:hover{color:var(--mint)}
+@media(max-width:760px){.feature{grid-template-columns:1fr}.feature h2{font-size:30px}}
 @media(max-width:640px){.hero h1{font-size:36px}.heroemblem{width:150px;height:150px}}
 </style></head><body>
 <header><div class="wrap nav"><a class="brand" href="/"><img class="brandmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><div class="logo">KSAK <span>AUDIO</span></div></a><nav>
@@ -224,8 +386,27 @@ app.get('/', (req, res) => {
       <h3 style="color:${p.accent}">${esc(p.name)}</h3>
       <p class="hook">${esc(p.hook)}</p>
       <div class="chips">${p.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+      <a class="cardlink" href="/plugins/${p.slug}">Full details →</a>
     </div>
   </article>`).join('');
+  const chronos = PLUGINS.find(p => p.id === 'chronos');
+  const chronosFeature = `
+  <section class="wrap" id="chronos-feature">
+    <div class="feature">
+      <img src="${chronos.img}" alt="KSAK CHRONOS plugin interface" loading="lazy">
+      <div>
+        <div class="tag">Flagship Spotlight · 06 · ${esc(chronos.sub)} · ${chronos.version}</div>
+        <h2>${esc(chronos.name)}</h2>
+        <p class="hook">${esc(chronos.hook)}</p>
+        <p>${esc(DETAILS.chronos.teaser)}</p>
+        <div class="chips">${chronos.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+        <div class="row">
+          <a class="btn" href="/plugins/${chronos.slug}">Explore KSAK CHRONOS →</a>
+          <button class="btn locked" disabled>Trial coming soon</button>
+        </div>
+      </div>
+    </div>
+  </section>`;
   const nodes = MODULES.map((m, i) => `${i ? '<span class="arrow">›</span>' : ''}<button class="node${i === 0 ? ' on' : ''}" data-i="${i}" aria-label="Module ${m.n} ${esc(m.full)}">${m.n}</button>`).join('');
   const dl = PLUGINS.map(p => p.trial === false ? `
     <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} · VST3 · Windows</span></div>
@@ -255,6 +436,7 @@ app.get('/', (req, res) => {
     </div>
     <img class="heroimg" src="/assets/pre.png" alt="KSAK-Pre plugin interface">
   </section>
+  ${chronosFeature}
   <section class="wrap"><div class="grid">${cards}</div></section>
   <section class="wrap blk" >
     <h2>KSAK-Pre — the chain</h2>
@@ -363,6 +545,53 @@ app.get('/owner', requireOwner, (req, res) => {
     <table><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr>${urows}</table>
     <h2 style="margin-top:30px">Download activity</h2>
     <table><tr><th>Account</th><th>Plugin</th><th>When</th></tr>${arows}</table>
+  </section>`));
+});
+
+/* ---------- per-plugin pages ---------- */
+function dlRow(p, user) {
+  return p.trial === false ? `
+    <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} · VST3 · Windows</span></div>
+    <button class="btn locked" disabled>Trial coming soon</button>
+    </div>` : `
+    <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} TRIAL · ${mb(p.size)} · VST3 · Windows</span></div>
+    ${user
+      ? `<button class="btn" data-dl="${p.id}">Download</button>`
+      : `<a class="btn locked" href="/auth?notice=${encodeURIComponent('Create an account or sign in to download trials.')}">🔒 Sign in to download</a>`}
+    </div>`;
+}
+const DL_SCRIPT = `<script>document.querySelectorAll('[data-dl]').forEach(function(b){b.addEventListener('click',function(){b.disabled=true;b.textContent='Preparing…';fetch('/api/download-link',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':document.querySelector('meta[name=csrf]').content},body:JSON.stringify({plugin:b.dataset.dl})}).then(function(r){return r.json()}).then(function(j){if(j.url){window.location=j.url;}else{document.getElementById('dlmsg').innerHTML='<div class="err">'+(j.error||'Something went wrong.')+'</div>';b.disabled=false;b.textContent='Download';}}).catch(function(){b.disabled=false;b.textContent='Download';});});});</script>`;
+
+app.get('/plugins/:slug', (req, res, next) => {
+  const idx = PLUGINS.findIndex(p => p.slug === req.params.slug);
+  if (idx < 0) return next();
+  const p = PLUGINS[idx];
+  const d = DETAILS[p.id];
+  const prev = PLUGINS[(idx + PLUGINS.length - 1) % PLUGINS.length];
+  const nxt = PLUGINS[(idx + 1) % PLUGINS.length];
+  const pnav = PLUGINS.map(q => `<a href="/plugins/${q.slug}"${q.id === p.id ? ' class="on"' : ''}>${esc(q.name)}</a>`).join('');
+  res.send(page(p.name, `
+  <section class="wrap" style="padding:36px 20px 10px">
+    <nav class="pnav">${pnav}</nav>
+    <img class="heroimg" src="${p.img}" alt="${esc(p.name)} plugin interface">
+    <div class="tag" style="margin-top:24px">${String(idx + 1).padStart(2, '0')} · ${esc(p.sub)} · ${p.version}${p.trial === false ? '' : ' · 30-Day Trial'}</div>
+    <h1 style="color:${p.accent};font-size:46px;line-height:1.08;margin:8px 0 4px">${esc(p.name)}</h1>
+    <p class="hook" style="font-size:20px">${esc(p.hook)}</p>
+    <div class="bio">${d.bio.map(t => `<p>${esc(t)}</p>`).join('')}</div>
+    <h2 style="font-size:30px;margin:30px 0 14px">Features</h2>
+    <ul class="feat">${d.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+    <h2 style="font-size:30px;margin:36px 0 6px">${p.trial === false ? 'Availability' : '30-Day Trial Download'}</h2>
+    <p class="sub muted" style="margin:0 0 14px">${p.trial === false
+      ? 'CHRONOS is the newest member of the suite. Its trial build is not available yet — the other five plugins\u2019 trials are live for members today.'
+      : 'Members-only, like every KSAK trial. Create a free account and the download unlocks; links expire 15 minutes after you tap. On day 31 the trial goes silent and locks.'}</p>
+    ${dlRow(p, req.user)}
+    <div id="dlmsg"></div>
+    ${req.user && p.trial !== false ? `<meta name="csrf" content="${esc(req.session.csrf)}">${DL_SCRIPT}` : ''}
+    <div class="prevnext">
+      <a href="/plugins/${prev.slug}">← ${esc(prev.name)}</a>
+      <a href="/#downloads">All downloads</a>
+      <a href="/plugins/${nxt.slug}">${esc(nxt.name)} →</a>
+    </div>
   </section>`));
 });
 
