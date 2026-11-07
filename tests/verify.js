@@ -110,32 +110,28 @@ async function main() {
     check('Spotlight CHRONOS slide keeps Trial coming soon, no data-dl wiring',
       spot.includes('Trial coming soon') && !spot.includes('data-dl="chronos"'));
 
-    // --- Module pages: one per module (59 total) ---
-    let modPagesOk = true, modDetail = '';
+    // --- No module pages (Kurt correction): the explorer cycles modules in-page only ---
+    const modGone1 = await req(null, '/plugins/ksak-pre/modules/loudness');
+    const modGone2 = await req(null, '/plugins/ksak-chronos/modules/noise');
+    check('No module pages exist: no /modules/ links anywhere, module URLs 404',
+      !home.includes('/modules/') && modGone1.status === 404 && modGone2.status === 404, `${modGone1.status}/${modGone2.status}`);
     const allImgs = new Set();
-    if (EX) for (const ep of EX) {
-      const pr = await (await req(null, `/plugins/${ep.slug}`)).text();
-      const links = (pr.match(new RegExp(`/plugins/${ep.slug}/modules/`, 'g')) || []).length;
-      if (links < ep.modules.length) { modPagesOk = false; modDetail += `${ep.id}:links=${links} `; }
-      for (const md of ep.modules) {
-        allImgs.add(md.img);
-        const mr = await req(null, md.href);
-        const mb = await mr.text();
-        const mbText = mb.replace(/&amp;/g, '&');
-        const okm = mr.status === 200 && mbText.includes(md.full) && mb.includes(ep.name)
-          && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(mb) && !mb.includes('/dl/')
-          && !mb.includes('data-dl="chronos"');
-        if (!okm) { modPagesOk = false; modDetail += `${md.href}:${mr.status} `; }
-      }
-    }
-    check('All 59 module pages serve with module + plugin name, clean, correctly wired; plugin pages link them all', modPagesOk, modDetail);
-    const badMod = await req(null, '/plugins/ksak-pre/modules/nope');
-    const badMod2 = await req(null, '/plugins/nope/modules/nope');
-    check('Unknown module slugs 404', badMod.status === 404 && badMod2.status === 404, `${badMod.status}/${badMod2.status}`);
-
+    if (EX) for (const ep of EX) for (const md of ep.modules) allImgs.add(md.img);
     let expImgOk = true;
     for (const u of allImgs) { const r = await fetch(BASE + u); if (!r.ok) expImgOk = false; await r.arrayBuffer(); }
     check('All explorer/module images serve', expImgOk, `${allImgs.size} unique images`);
+
+    // --- Dedicated tab pages: /plugins + /downloads ---
+    const plugRes = await req(null, '/plugins');
+    const plug = await plugRes.text();
+    check('/plugins is a dedicated page listing all six plugins with links to each plugin page',
+      plugRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => plug.includes(n)) && ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => plug.includes(`/plugins/${s}`)), `status ${plugRes.status}`);
+    const dlpRes = await req(null, '/downloads');
+    const dlp = await dlpRes.text();
+    check('/downloads is a dedicated page: six rows, signed-out lock, CHRONOS Trial coming soon, no leaks',
+      dlpRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => dlp.includes(n)) && dlp.includes('Sign in to download') && dlp.includes('Trial coming soon') && !dlp.includes('data-dl') && !dlp.includes('/dl/') && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(dlp), `status ${dlpRes.status}`);
+    check('Nav tabs point at dedicated pages, not homepage anchors',
+      home.includes('href="/plugins"') && home.includes('href="/downloads"') && home.includes('href="/plugins/ksak-pre"') && !home.includes('href="/#downloads"') && !home.includes('href="/#pre"'));
 
     let allImg = true;
     for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
@@ -167,6 +163,8 @@ async function main() {
     const acct = await (await req(member, '/account')).text();
     const csrf = (acct.match(/meta name="csrf" content="([a-f0-9]+)"/) || [])[1];
     check('Account page carries CSRF token', !!csrf);
+    const dlpIn = await (await req(member, '/downloads')).text();
+    check('Signed-in /downloads unlocks trial buttons (gate preserved), CHRONOS still unwired', dlpIn.includes('data-dl="pre"') && dlpIn.includes('name="csrf"') && !dlpIn.includes('data-dl="chronos"'));
 
     for (const pid of ['pre', 'colossus']) {
       const linkRes = await req(member, '/api/download-link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf }, body: JSON.stringify({ plugin: pid }) });

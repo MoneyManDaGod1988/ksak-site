@@ -743,7 +743,7 @@ ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
 </style></head><body>
 ${sideRails()}
 <header><div class="wrap nav"><a class="brand" href="/"><img class="brandmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><div class="logo">KSAK <span>AUDIO</span></div></a><nav>
-<a href="/">Plugins</a><a href="/showcase">Showcase</a><a href="/#pre">KSAK-Pre</a><a href="/#downloads">Downloads</a>
+<a href="/plugins">Plugins</a><a href="/showcase">Showcase</a><a href="/plugins/ksak-pre">KSAK-Pre</a><a href="/downloads">Downloads</a>
 ${u ? `<a href="/account">My Account</a>${u.role === 'owner' ? '<a href="/owner">Owner</a>' : ''}
 <form method="post" action="/auth/signout" style="display:inline"><input type="hidden" name="_csrf" value="${esc(extraCsrf())}"><button class="btn ghost" type="submit">Sign out</button></form>`
   : `<a href="/auth">Sign in</a><a class="btn" href="/auth?mode=signup">Create account</a>`}
@@ -824,7 +824,7 @@ app.get('/', (req, res) => {
     })();
     </script>
   </section>`;
-  const explorerPlugins = PLUGINS.map(p => ({ id: p.id, slug: p.slug, name: p.name, accent: p.accent, modules: (EXPLORERS[p.id] || []).map((m, i) => ({ n: i + 1, slug: m.slug, full: m.full, desc: m.desc, img: m.img, href: `/plugins/${p.slug}/modules/${m.slug}` })) }));
+  const explorerPlugins = PLUGINS.map(p => ({ id: p.id, slug: p.slug, name: p.name, accent: p.accent, modules: (EXPLORERS[p.id] || []).map((m, i) => ({ n: i + 1, slug: m.slug, full: m.full, desc: m.desc, img: m.img })) }));
   const preExplorer = explorerPlugins[0];
   const nodes = preExplorer.modules.map((m, i) => `${i ? '<span class="arrow">›</span>' : ''}<button class="node${i === 0 ? ' on' : ''}" data-i="${i}" aria-label="Module ${m.n} ${esc(m.full)}">${m.n}</button>`).join('');
   const ptabs = explorerPlugins.map((ep, i) => `<button class="ptab${i === 0 ? ' on' : ''}" data-p="${ep.id}" aria-label="Explore ${esc(ep.name)} modules">${esc(ep.name)}</button>`).join('');
@@ -859,22 +859,21 @@ app.get('/', (req, res) => {
   <section class="wrap"><div class="grid">${cards}</div></section>
   <section class="wrap blk" id="explorer">
     <h2>Explore the modules</h2>
-    <p class="sub">Pick a plugin, then tap a module to cycle it. KSAK-Pre opens the tour — its exact fresh-load order, Loudness last on purpose. Every module also has its own page.</p>
+    <p class="sub">Pick a plugin, then tap a module to cycle it. KSAK-Pre opens the tour — its exact fresh-load order, Loudness last on purpose.</p>
     <div class="ptabs">${ptabs}</div>
     <div class="chain" id="chainNodes">${nodes}</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
       <img class="chainimg" id="chainImg" src="${preExplorer.modules[0].img}" alt="Module panel">
       <div><div class="tag" id="chainTag">Module 1 of 10 · KSAK-Pre</div><h3 id="chainName" style="margin:6px 0;font-size:28px">${preExplorer.modules[0].full}</h3>
-      <p class="muted" id="chainDesc" style="max-width:300px">${preExplorer.modules[0].desc}</p>
-      <a class="cardlink" id="chainLink" href="${preExplorer.modules[0].href}">Full module page →</a></div>
+      <p class="muted" id="chainDesc" style="max-width:300px">${preExplorer.modules[0].desc}</p></div>
     </div>
     <script>
     var EXPLORERS=${JSON.stringify(explorerPlugins)};
     (function(){
       var cur=EXPLORERS[0],mi=0;
-      var img=document.getElementById('chainImg'),nameEl=document.getElementById('chainName'),tagEl=document.getElementById('chainTag'),descEl=document.getElementById('chainDesc'),linkEl=document.getElementById('chainLink'),nodesEl=document.getElementById('chainNodes');
+      var img=document.getElementById('chainImg'),nameEl=document.getElementById('chainName'),tagEl=document.getElementById('chainTag'),descEl=document.getElementById('chainDesc'),nodesEl=document.getElementById('chainNodes');
       function drawNodes(){nodesEl.innerHTML=cur.modules.map(function(m,i){return (i?'<span class="arrow">›</span>':'')+'<button class="node'+(i===mi?' on':'')+'" data-i="'+i+'" aria-label="Module '+m.n+' '+m.full+'">'+m.n+'</button>';}).join('');nodesEl.querySelectorAll('.node').forEach(function(b){b.addEventListener('click',function(){pick(+b.dataset.i);});});}
-      function pick(i){mi=i;var m=cur.modules[mi];img.src=m.img;nameEl.textContent=m.full;tagEl.textContent='Module '+m.n+' of '+cur.modules.length+' · '+cur.name;descEl.textContent=m.desc;linkEl.href=m.href;nodesEl.querySelectorAll('.node').forEach(function(x,k){x.classList.toggle('on',k===mi);});}
+      function pick(i){mi=i;var m=cur.modules[mi];img.src=m.img;nameEl.textContent=m.full;tagEl.textContent='Module '+m.n+' of '+cur.modules.length+' · '+cur.name;descEl.textContent=m.desc;nodesEl.querySelectorAll('.node').forEach(function(x,k){x.classList.toggle('on',k===mi);});}
       document.querySelectorAll('.ptab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.ptab').forEach(function(x){x.classList.remove('on');});t.classList.add('on');cur=EXPLORERS.filter(function(e){return e.id===t.dataset.p;})[0];mi=0;drawNodes();pick(0);});});
     })();
     </script>
@@ -992,6 +991,43 @@ function dlRow(p, user) {
 }
 const DL_SCRIPT = `<script>document.querySelectorAll('[data-dl]').forEach(function(b){b.addEventListener('click',function(){b.disabled=true;b.textContent='Preparing…';fetch('/api/download-link',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':document.querySelector('meta[name=csrf]').content},body:JSON.stringify({plugin:b.dataset.dl})}).then(function(r){return r.json()}).then(function(j){if(j.url){window.location=j.url;}else{document.getElementById('dlmsg').innerHTML='<div class="err">'+(j.error||'Something went wrong.')+'</div>';b.disabled=false;b.textContent='Download';}}).catch(function(){b.disabled=false;b.textContent='Download';});});});</script>`;
 
+/* ---------- plugins index: the Plugins tab's own page ---------- */
+app.get('/plugins', (req, res) => {
+  const cards = PLUGINS.map((p, i) => `
+  <article class="card">
+    <img src="${p.img}" alt="${esc(p.name)} plugin interface" loading="lazy">
+    <div class="in">
+      <div class="tag">${String(i + 1).padStart(2, '0')} · ${esc(p.sub)} · ${p.version}${p.trial === false ? '' : ' · 30-Day Trial'}</div>
+      <h3 style="color:${p.accent}">${esc(p.name)}</h3>
+      <p class="hook">${esc(p.hook)}</p>
+      <div class="chips">${p.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+      <a class="cardlink" href="/plugins/${p.slug}">Full details →</a>
+    </div>
+  </article>`).join('');
+  res.send(page('Plugins — The KSAK Suite', `
+  <section class="wrap" style="padding:36px 20px 10px">
+    <div class="tag">The KSAK Audio Effects Plugin Suite</div>
+    <h1 style="font-size:46px;line-height:1.08;margin:8px 0 10px">Six plugins. One suite.</h1>
+    <p class="sub muted" style="margin:0 0 22px">A complete vocal chain, two feel-first essentials, and three flagships. Open any plugin for its full story — every trial runs 30 days, then locks.</p>
+    <div class="grid">${cards}</div>
+  </section>`));
+});
+
+/* ---------- downloads: the Downloads tab's own page ---------- */
+app.get('/downloads', (req, res) => {
+  const rows = PLUGINS.map(p => dlRow(p, req.user)).join('');
+  res.send(page('30-Day Trial Downloads', `
+  <section class="wrap" style="padding:36px 20px 10px">
+    <div class="tag">Members-only trials</div>
+    <h1 style="font-size:46px;line-height:1.08;margin:8px 0 10px">30-Day Trial Downloads</h1>
+    <p class="sub muted" style="margin:0 0 18px">${req.user ? 'Signed in — downloads are unlocked. Links expire 15 minutes after you tap.' : 'Downloads are members-only. Create a free account — it takes a minute — and the trials unlock. No account, no download: that is the rule.'}</p>
+    ${rows}
+    <p class="muted" style="font-size:13px">Each trial is a separate build with no unlock inside it: on day 31 it goes silent and locks. Updates and new versions are delivered only through your KSAK account.</p>
+    <div id="dlmsg"></div>
+    ${req.user ? `<meta name="csrf" content="${esc(req.session.csrf)}">${DL_SCRIPT}` : ''}
+  </section>`));
+});
+
 app.get('/plugins/:slug', (req, res, next) => {
   const idx = PLUGINS.findIndex(p => p.slug === req.params.slug);
   if (idx < 0) return next();
@@ -1010,9 +1046,6 @@ app.get('/plugins/:slug', (req, res, next) => {
     <div class="bio">${d.bio.map(t => `<p>${esc(t)}</p>`).join('')}</div>
     <h2 style="font-size:30px;margin:30px 0 14px">Features</h2>
     <ul class="feat">${d.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
-    <h2 style="font-size:30px;margin:30px 0 14px">Modules</h2>
-    <p class="sub muted" style="margin:0 0 14px">Every module and section of ${esc(p.name)}, one page each — what it does, its character, and its real controls.</p>
-    <nav class="modnav">${(EXPLORERS[p.id] || []).map(m => `<a href="/plugins/${p.slug}/modules/${m.slug}">${esc(m.full)}</a>`).join('')}</nav>
     <h2 style="font-size:30px;margin:36px 0 6px">${p.trial === false ? 'Availability' : '30-Day Trial Download'}</h2>
     <p class="sub muted" style="margin:0 0 14px">${p.trial === false
       ? 'CHRONOS is the newest member of the suite. Its trial build is not available yet — the other five plugins\u2019 trials are live for members today.'
@@ -1022,45 +1055,8 @@ app.get('/plugins/:slug', (req, res, next) => {
     ${req.user && p.trial !== false ? `<meta name="csrf" content="${esc(req.session.csrf)}">${DL_SCRIPT}` : ''}
     <div class="prevnext">
       <a href="/plugins/${prev.slug}">← ${esc(prev.name)}</a>
-      <a href="/#downloads">All downloads</a>
+      <a href="/downloads">All downloads</a>
       <a href="/plugins/${nxt.slug}">${esc(nxt.name)} →</a>
-    </div>
-  </section>`));
-});
-
-/* ---------- module pages: one per module, data-driven from EXPLORERS ---------- */
-app.get('/plugins/:slug/modules/:mslug', (req, res, next) => {
-  const p = PLUGINS.find(x => x.slug === req.params.slug);
-  if (!p) return next();
-  const mods = EXPLORERS[p.id] || [];
-  const mi = mods.findIndex(m => m.slug === req.params.mslug);
-  if (mi < 0) return next();
-  const m = mods[mi];
-  const prevM = mods[(mi + mods.length - 1) % mods.length];
-  const nxtM = mods[(mi + 1) % mods.length];
-  const modnav = mods.map((q, qi) => `<a href="/plugins/${p.slug}/modules/${q.slug}"${qi === mi ? ' class="on"' : ''}>${esc(q.full)}</a>`).join('');
-  res.send(page(`${m.full} — ${p.name}`, `
-  <section class="wrap" style="padding:36px 20px 10px">
-    <nav class="pnav"><a href="/plugins/${p.slug}">← ${esc(p.name)}</a>${PLUGINS.filter(q => q.id !== p.id).map(q => `<a href="/plugins/${q.slug}">${esc(q.name)}</a>`).join('')}</nav>
-    <div class="tag">${esc(p.name)} · Module ${mi + 1} of ${mods.length}</div>
-    <h1 style="color:${p.accent};font-size:42px;line-height:1.1;margin:8px 0 14px">${esc(m.full)}</h1>
-    <img class="modimg" src="${m.img}" alt="${esc(m.full)} — ${esc(p.name)} face detail">
-    <div class="bio" style="margin-top:22px">${m.body.map(t => `<p>${esc(t)}</p>`).join('')}</div>
-    <h2 style="font-size:28px;margin:28px 0 14px">Controls & parameters</h2>
-    <ul class="feat">${m.controls.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
-    <h2 style="font-size:28px;margin:32px 0 14px">All ${esc(p.name)} modules</h2>
-    <nav class="modnav">${modnav}</nav>
-    <h2 style="font-size:30px;margin:36px 0 6px">${p.trial === false ? 'Availability' : '30-Day Trial Download'}</h2>
-    <p class="sub muted" style="margin:0 0 14px">${p.trial === false
-      ? 'CHRONOS is the newest member of the suite. Its trial build is not available yet — the other five plugins\u2019 trials are live for members today.'
-      : 'Members-only, like every KSAK trial. Create a free account and the download unlocks; links expire 15 minutes after you tap. On day 31 the trial goes silent and locks.'}</p>
-    ${dlRow(p, req.user)}
-    <div id="dlmsg"></div>
-    ${req.user && p.trial !== false ? `<meta name="csrf" content="${esc(req.session.csrf)}">${DL_SCRIPT}` : ''}
-    <div class="prevnext">
-      <a href="/plugins/${p.slug}/modules/${prevM.slug}">← ${esc(prevM.full)}</a>
-      <a href="/plugins/${p.slug}">${esc(p.name)} — full details</a>
-      <a href="/plugins/${p.slug}/modules/${nxtM.slug}">${esc(nxtM.full)} →</a>
     </div>
   </section>`));
 });
