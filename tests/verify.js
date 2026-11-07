@@ -88,6 +88,55 @@ async function main() {
     check('Showcase links every slide to its plugin page, no forbidden strings, no /dl/ leak', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => show.includes(`/plugins/${s}`)) && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(show) && !show.includes('/dl/'));
     check('Nav links to the Showcase page', home.includes('href="/showcase"'));
 
+    // --- Module explorer: all six plugins + per-plugin module data ---
+    const EXPECT_COUNTS = { pre: 10, delay: 6, reverb: 6, omega: 8, colossus: 13, chronos: 16 };
+    const expMatch = home.match(/var EXPLORERS=(\[.*?\]);/s);
+    let EX = null;
+    try { EX = JSON.parse(expMatch[1]); } catch { EX = null; }
+    check('Homepage explorer embeds all six plugins with correct module counts',
+      !!EX && EX.length === 6 && EX.every(ep => ep.modules && ep.modules.length === EXPECT_COUNTS[ep.id]),
+      EX ? EX.map(ep => `${ep.id}:${(ep.modules || []).length}`).join(' ') : 'no EXPLORERS match');
+    check('Explorer defaults to KSAK-Pre module 1 server-side (Pre UX unchanged)',
+      home.includes('id="chainImg" src="/assets/module01.png"') && home.includes('Module 1 of 10 · KSAK-Pre') && home.includes('data-p="pre"') && home.includes('data-p="chronos"'));
+
+    // --- Revolving spotlight: six slides, CHRONOS first ---
+    const spotStart = home.indexOf('id="spotTrack"');
+    const spotEnd = spotStart >= 0 ? home.indexOf('</section>', spotStart) : -1;
+    const spot = spotStart >= 0 && spotEnd > spotStart ? home.slice(spotStart, spotEnd) : '';
+    check('Spotlight carousel: 6 slides, CHRONOS slide first, controls + script present',
+      (spot.match(/class="spot"/g) || []).length === 6 && spot.indexOf('KSAK CHRONOS') >= 0 && spot.indexOf('KSAK CHRONOS') < spot.indexOf('KSAK-Pre') && home.includes('id="spotPrev"') && home.includes('id="spotNext"') && home.includes('data-spot="5"') && home.includes('prefers-reduced-motion'));
+    check('Spotlight slides carry every plugin teaser + page link',
+      ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => spot.includes(`/plugins/${s}`)) && ['whole vocal chain in a single window', 'tape-style echo', 'Five spaces one click apart', '64 fully independent bands', 'Seven circuits, three architectures'].every(t => spot.includes(t)));
+    check('Spotlight CHRONOS slide keeps Trial coming soon, no data-dl wiring',
+      spot.includes('Trial coming soon') && !spot.includes('data-dl="chronos"'));
+
+    // --- Module pages: one per module (59 total) ---
+    let modPagesOk = true, modDetail = '';
+    const allImgs = new Set();
+    if (EX) for (const ep of EX) {
+      const pr = await (await req(null, `/plugins/${ep.slug}`)).text();
+      const links = (pr.match(new RegExp(`/plugins/${ep.slug}/modules/`, 'g')) || []).length;
+      if (links < ep.modules.length) { modPagesOk = false; modDetail += `${ep.id}:links=${links} `; }
+      for (const md of ep.modules) {
+        allImgs.add(md.img);
+        const mr = await req(null, md.href);
+        const mb = await mr.text();
+        const mbText = mb.replace(/&amp;/g, '&');
+        const okm = mr.status === 200 && mbText.includes(md.full) && mb.includes(ep.name)
+          && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(mb) && !mb.includes('/dl/')
+          && !mb.includes('data-dl="chronos"');
+        if (!okm) { modPagesOk = false; modDetail += `${md.href}:${mr.status} `; }
+      }
+    }
+    check('All 59 module pages serve with module + plugin name, clean, correctly wired; plugin pages link them all', modPagesOk, modDetail);
+    const badMod = await req(null, '/plugins/ksak-pre/modules/nope');
+    const badMod2 = await req(null, '/plugins/nope/modules/nope');
+    check('Unknown module slugs 404', badMod.status === 404 && badMod2.status === 404, `${badMod.status}/${badMod2.status}`);
+
+    let expImgOk = true;
+    for (const u of allImgs) { const r = await fetch(BASE + u); if (!r.ok) expImgOk = false; await r.arrayBuffer(); }
+    check('All explorer/module images serve', expImgOk, `${allImgs.size} unique images`);
+
     let allImg = true;
     for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
       const r = await fetch(`${BASE}/assets/${a}.png`); if (!r.ok) allImg = false; await r.arrayBuffer();

@@ -66,6 +66,7 @@ const PLUGINS = [
  * and the suite canon — nothing here is claimed that the manuals do not state. */
 const DETAILS = {
   pre: {
+    teaser: 'The whole vocal chain in a single window: ten modules that each do the job of a classic studio unit, rebuilt as KSAK Audio originals — reorderable, MIDI-learnable, and bit-identical to bypass on a fresh load.',
     bio: [
       'KSAK-Pre is the whole vocal chain in a single window: noise gate, drive preamp, vocal compressor, dynamic EQ, multiband, tone shaper, glue compressor, stereo imager, limiter and loudness metering — ten modules that each do the job of a classic studio unit, rebuilt as KSAK Audio originals. Mono and stereo, 44.1–192 kHz.',
       'Every module is modeled control-for-control on a classic unit engineers already trust — every knob, switch, range and taper mirrors the original, and the detectors, timing, knees and saturation character are measured against it, then level-matched A/B\u2019d on real material. Where a difference remains, it is documented, never hidden.',
@@ -86,6 +87,7 @@ const DETAILS = {
     ],
   },
   delay: {
+    teaser: 'A tape-style echo built around one rule: simple means simple to use, not simple in power. Five characters, tempo sync with tap tempo, ducking, freeze — and a 5-band EQ that shapes the repeats only.',
     bio: [
       'Simple Delay — The Repeat Deck — is a tape-style echo built around one rule: \u201csimple\u201d means simple to use, not simple in power. Every control starts at a true neutral position, so what you hear after you turn a knob is exactly what that knob did. A fresh load is UNITY — START CLEAN: what goes in comes out unchanged, sample for sample.',
       'Five characters cover the echo vocabulary. SLAP is a tight slapback voice with its own feedback character, so a slap stays a slap — one tight bounce and a short tail. DIGITAL is pristine, full-bandwidth repeats. TAPE darkens and gently saturates each pass. ANALOG is bucket-brigade darkness with a lifted low end. PING-PONG bounces the repeats left–right across the stereo field.',
@@ -108,6 +110,7 @@ const DETAILS = {
     ],
   },
   reverb: {
+    teaser: 'Five spaces one click apart — ROOM, PLATE, HALL, CHAMBER and SPACE — with nine gold knobs, ducking, freeze, and two layers of shaping that never touch the dry signal.',
     bio: [
       'Simple Reverb — The Vault — holds five spaces one click apart: ROOM, PLATE, HALL, CHAMBER and SPACE. Their characters are measured, not just named: Room is tight and present, the shortest reflections of the five; Plate is bright and dense, the classic vocal and snare plate; Hall is the big public space with a longer decay than the knob reads; Chamber is small, dark and intimate; Space is the vast one, where the tail becomes part of the music.',
       'Nine gold knobs run the space. DECAY sets how long the tail takes to fall into silence — 0.1 to 30 seconds. PRE-DELAY opens a gap so the dry sound stays clear while the space blooms behind it. SIZE is the physical size of the room, independent of decay: decay is how long, size is how big. TONE tilts the tank\u2019s filters, MOD keeps gentle movement inside the tail so long notes feel like they are moving through weather, and WIDTH widens the wet signal only.',
@@ -130,6 +133,7 @@ const DETAILS = {
     ],
   },
   omega: {
+    teaser: '64 fully independent bands, every one carrying all 17 filter types — plus a pitch engine, a harmony drawer, and a local AI that proposes while you dispose.',
     bio: [
       'OMEGA EQ is the flagship equalizer: 64 fully independent bands, and every band carries all 17 filter types — Bell, Low Shelf, High Shelf, Low Pass, High Pass, Notch, Band Pass, Tilt Shelf, Flat Tilt, Flat Top, the razor Sword bell, All-Pass, resonant passes, steep passes and Brick Cut. The curves are drawn from the same mathematics that processes the audio, so what you see is literally what you get, right up to Nyquist, with no high-frequency cramping.',
       'Each band can wear one of nine vintage curve characters — exact Digital, Pultec, API, Neve, SSL, Tube, British Console, American Console or Passive — with a Character knob blending in soft saturation on that band\u2019s contribution only. And each band picks its own mode: Static; Dynamic, a full gain computer per band with threshold, range, knee, attack, release, lookahead and a relative-threshold mode; or Spectral, cutting only the FFT bins that poke above the band\u2019s own average.',
@@ -154,6 +158,7 @@ const DETAILS = {
     ],
   },
   colossus: {
+    teaser: 'Seven circuits, three architectures and a Dual Engine: the dynamics chain you would normally build from three or four plugins, held in one instance under one preset.',
     bio: [
       'KSAK COLOSSUS is the flagship compressor of the suite — the dynamics pair to OMEGA EQ. One instance holds the chain you would normally build from three or four separate plugins, under one preset and one undo history. And the face is a colossus: a monumental statue composition in Imperial Bronze, built flat to the glass, where every part of the statue does a job — the transfer curve lives in its chest, the gain-reduction columns stand at the pedestal\u2019s edge.',
       'Seven circuits, each a way of hearing level and reacting to it. CLEAN is transparent and precise, control without a fingerprint. BUS is RMS-leaning glue in the SSL G-Bus tradition. FET is the fast, forward 1176 character. OPTO rides a performance with the LA-2A\u2019s smooth, program-dependent release. VARI-MU is slow, rich glue whose ratio itself grows as the signal gets louder. VCA PUNCH pushes the middle of the sound at you, tight and controlled. CHAMELEON is the Distressor\u2019s range — extended ratios including NUKE, and the hottest saturation of the seven. Every circuit carries its own Character saturation: per circuit, never forced.',
@@ -209,6 +214,323 @@ const MODULES = [
   ['Multi', 'Multiband'], ['Tone', 'Tone Shaper'], ['Glue', 'Glue Comp'], ['Image', 'Stereo Imager'],
   ['Limit', 'Limiter'], ['Loud', 'Loudness'],
 ].map(([short, full], i) => ({ n: i + 1, short, full, img: `/assets/module${String(i + 1).padStart(2, '0')}.png` }));
+/* ---------- module explorer data ----------
+ * Every plugin's modules/sections, drawn from its delivered manual (the same
+ * sources as DETAILS): KSAK-Pre User Manual v0.3.9 booklet; Simple Delay
+ * Manual v0.1.7; Simple Reverb Manual v0.1.6; OMEGA EQ Visual Manual v0.1.10;
+ * COLOSSUS Manual v0.1.6; KSAK CHRONOS User Manual Ed. 1.2 + locked spec.
+ * Visuals are true crops of each plugin's own shipped face (public/assets),
+ * or the full face where a section lives in a drawer off the resting face. */
+const EXPLORERS = {
+  pre: [
+    { slug: 'noise-gate', full: 'Noise Gate', img: '/assets/module01.png',
+      desc: 'The bouncer at the door of the chain: lets the voice through and closes on the noise between phrases.',
+      body: ['The bouncer at the door of the chain: it lets the voice through and closes on the noise between phrases. Cleans the gaps first — bleed and room noise between phrases are silenced before the rest of the chain ever hears them. The status line at the bottom shows live ATTENUATION.',
+             'A KSAK Audio original — no single classic unit was copied. It is the studio-standard gate workflow (threshold, attack, hold, release) built for this strip and voiced for vocals, with a key filter that focuses the gate’s hearing on the voice band so rumble doesn’t hold it open.'],
+      controls: ['THRESH — level below which the gate starts to close (−80 to 0 dB)', 'RANGE — how far the gate closes (0 to −80 dB); 0 = never touches the signal', 'ATTACK — how fast it opens (0.01–100 ms)', 'HOLD — how long it stays open after the signal drops (0–2000 ms)', 'RELEASE — how smoothly it closes (10–2000 ms)', 'HYSTER — hysteresis, so the gate doesn’t chatter on borderline sounds (0–12 dB)', 'LOOKAHD — lookahead, so transients aren’t clipped (0–5 ms)', 'KEY FRQ — sidechain key filter (20 Hz–10 kHz), plus KEY LISTEN to hear the key signal'] },
+    { slug: 'drive-preamp', full: 'Drive Preamp', img: '/assets/module02.png',
+      desc: 'Console drive and musical EQ: warmth and shape before any compression touches the signal.',
+      body: ['The first color in the chain: console drive, EQ and fader trims that warm a vocal up before compression touches it. Every EQ band has its own Gain knob (±15 dB) and Frequency knob.',
+             'Modeled after the Scheps 73 (Waves) — Waves’ model of the Neve 1073 console channel Andrew Scheps made famous. KSAK-Pre captures its harmonic drive, EQ bands, high-pass filter and IN / OUT faders.'],
+      controls: ['DRIVE — harmonic drive (0–100%); 0 = clean, completely neutral', 'PREAMP — overall level through the module (−24 to +24 dB)', 'HIGH G / HIGH F — high shelf gain, and its frequency (6–18 kHz)', 'MID G / MID F — mid bell gain, and its frequency (200 Hz–6 kHz)', 'LOW G / LOW F — low shelf gain, and its frequency (40–400 Hz)', 'HP G / HP F — high-pass band gain, and its frequency (20–400 Hz)', 'IN L / IN R · OUT L / OUT R — per-channel trims (±12 dB)'] },
+    { slug: 'vocal-comp', full: 'Vocal Comp', img: '/assets/module03.png',
+      desc: 'Three sliders, one job — a vocal that sits still in the mix.',
+      body: ['The lead-vocal leveler: one gesture rides a vocal to the front of the mix and keeps it there, phrase after phrase. Three sliders, read against the printed tick scale, and the status line shows live GAIN REDUCTION.',
+             'Modeled after R-Vox / Renaissance Vox (Waves) — the industry-standard one-knob vocal compressor. KSAK-Pre captures its compression, gate and gain riding in a single control, tuned so vocals stay upfront without sounding squeezed.'],
+      controls: ['GATE slider — a gentle energy gate that tidies pauses (0 to −70 dB)', 'COMP slider — the amount of compression (0–100); 0 = none', 'GAIN slider — make-up gain after compression (−∞ to +24 dB)', 'Status line — live GAIN REDUCTION in dB'] },
+    { slug: 'dynamic-eq', full: 'Dynamic EQ', img: '/assets/module04.png',
+      desc: 'Seven bands that can move on their own — surgical EQ that reacts only when the voice does.',
+      body: ['Surgical EQ that moves only when the voice does: seven bands, each with dynamic gain that answers the signal. The knobs edit only the selected band (white ring); the bright curve on the graph is live — static shape plus each band’s dynamic movement as it happens.',
+             'Modeled after the Kirchhoff EQ (Three-Body Technology). Bands 1 and 7 can change shape — Bell, Low Shelf, High Shelf, Low Pass, High Pass, Notch, Band Pass — and on the pass types the dynamics move the cutoff instead of the gain. Measured in the 0.3.9 sweep: every type on bands 1 and 7 was driven through the plugin and matched its labelled curve (worst error 0.23 dB).'],
+      controls: ['Band buttons 1–7 + the EQ graph — drag nodes for frequency/gain, wheel for Q', 'FREQ — the selected band’s frequency (20 Hz–20 kHz)', 'GAIN — its static gain (±15 dB)', 'Q — its width (0.3–30)', 'DYN — how far the band moves when triggered (±15 dB)', 'THRESH — the level that triggers the movement (−60 to 0 dB)', 'ATTACK — how fast the movement arrives (0–500 ms)', 'RELEASE — how fast it lets go (5–2000 ms)', 'Per-band BYPASS and SOLO'] },
+    { slug: 'multiband', full: 'Multiband', img: '/assets/module05.png',
+      desc: 'Four-band compression with a crossover display: tame one part of the spectrum without touching the rest.',
+      body: ['Four compressors in one module, one per frequency zone — lows, mids and air each get their own control. The crossover graph draws the four bands’ crossover shapes with the same Linkwitz-Riley 4th-order math the engine runs; where the curves cross is a crossover point.',
+             'Modeled after the MC404 (McDSP) — McDSP’s four-band compressor workhorse. KSAK-Pre captures its crossover workflow: per-band threshold, ratio, knee, bite and gain, over draggable crossovers.'],
+      controls: ['Band buttons 1–4 — the knobs below edit only the selected band', 'Crossover grips X1 · X2 · X3 — drag to move a crossover (X1 40–800 Hz · X2 400 Hz–4 kHz · X3 4–16 kHz)', 'GAIN — the selected band’s level (−∞ to +12 dB)', 'THRESH — where its compression starts (−48 to 0 dB)', 'RATIO — how hard it squeezes (1:1–20:1)', 'KNEE — how softly compression arrives (0–100%)', 'BITE — transient emphasis for the band (0–100)', 'ATTACK — 0.1–300 ms · RELEASE — 10–1000 ms', 'GR strip — live gain-reduction metering, one cell per band'] },
+    { slug: 'tone-shaper', full: 'Tone Shaper', img: '/assets/module06.png',
+      desc: 'Six bands with plain-language names, plus a row of color knobs — a vocal’s whole character in a few big, musical moves.',
+      body: ['Parallel tone shaping: blend the direct signal with four bands of body, warmth and air until the character sits right. Each fader reads against the printed tick scale; each band also has a FREQ select and its own ON switch under the faders.',
+             'Modeled after the Manny Marroquin Tone Shaper (Waves) — Manny Marroquin’s parallel-EQ tone box, where a vocal’s whole character turns on a few big, musical moves.'],
+      controls: ['DIRECT — 1 kHz low shelf: body of the voice in the mix', 'LOW — 100 Hz high shelf: fullness when up, mud control when down', 'LO-MID — 200 Hz bell: boxiness lives here', 'HI-MID — 1 kHz bell: presence and bite', 'HIGH — 8 kHz low shelf: brightness and air', 'WIDTH — Hardy-style shelf: perceived width of the track (inactive in MONO mode)', 'FREQ selects & band ON — each band picks its working frequency, and switches on its own', 'Color knobs — WARMTH · DISTORTION · SATURATION · GRIT · BRIGHTNESS (all 0–100, all neutral at 0)', 'INPUT / OUTPUT — level trims into and out of the module (±24 dB)'] },
+    { slug: 'glue-comp', full: 'Glue Comp', img: '/assets/module07.png',
+      desc: 'The compressor that makes many parts feel like one thing.',
+      body: ['The handshake: gentle bus compression that glues a vocal — or a whole mix — into one piece. The status line at the bottom shows live GAIN REDUCTION.',
+             'Modeled after the SSL G-Master Buss Compressor (Waves) — Waves’ model of the SSL 4000 G-series bus compressor, the sound of records sticking together. KSAK-Pre captures its threshold, ratio, attack, release, makeup and blend.'],
+      controls: ['THRESH — where compression starts (−40 to +20 dB)', 'MAKE-UP — level back after compression (0 to +20 dB)', 'RELEASE — 0.1–1.2 s, or AUTO REL', 'SC FILT — sidechain high-pass (20–500 Hz): keeps low end from driving the compressor', 'MIX — parallel blend: dry signal mixed back in (0–100%)', 'TRIM — output trim (−20 to +20 dB)', 'ATTACK — step control: 0.1 / 0.3 / 1 / 3 / 10 / 30 ms', 'RATIO — step control: 2 / 4 / 10 / 20', 'ANALOG — switches the classic modeled behavior'] },
+    { slug: 'stereo-imager', full: 'Stereo Imager', img: '/assets/module08.png',
+      desc: 'Placement and width for stereo material: widen backing stacks, keep the lead focused.',
+      body: ['Places the voice in width: widen backing stacks, keep the lead focused, and check the image stays honest. The horizontal sliders read against the printed tick scale, and the status line shows live OUT peaks (L / R, or M / S when METER MODE is M-S). In MONO mode the imager rests.',
+             'Modeled after the S1 Stereo Imager (Waves) — the classic stereo width tool. KSAK-Pre captures its width and imaging controls: spread a stereo vocal or stack without losing the center that carries it.'],
+      controls: ['GAIN fader — stereo level (−∞ to +12 dB)', 'WIDTH fader — stereo spread: 0 = mono-sum, 1.00 = untouched, up to 1.26', 'ASYMMETRY — balance the image’s energy (−100 to +100)', 'ROTATION — tilt the image back to centre (−100 to +100)', 'INPUT MODE — L-R or M-S: how the module reads the incoming field', 'SWAP — exchange left and right', 'INV L / INV R — invert one side’s polarity (diagnostic tools)', 'METER MODE — L-R or M-S: which peaks the status line publishes'] },
+    { slug: 'limiter', full: 'Limiter', img: '/assets/module09.png',
+      desc: 'The ceiling nothing crosses — brickwall limiting that sets exactly how loud the vocal is allowed to get.',
+      body: ['The ceiling: brickwall limiting that sets exactly how loud the vocal is allowed to get, and not a dB more. Keep it near the end of the chain. Both faders read against the printed tick scale, and the status line shows live ATTENUATION.',
+             'Modeled after the L2 UltraMaximizer (Waves) — the mastering limiter that defined the loudness era. KSAK-Pre captures its ceiling-and-release workflow: set the top, push the vocal into it, stay clean.'],
+      controls: ['THRESH fader — how hard you drive into the limiter (0 to −30 dB)', 'CEILING fader — the maximum output level (0 to −30 dB); set −1.0 dB for anything headed to streaming or a lossy codec', 'RELEASE — 0.01–1000 ms', 'ARC — auto release control: the release adapts to the program', 'QUANTIZE — final-stage word length: Off / 24 / 20 / 18 / 16 bit', 'DITHER — None / Type 1 / Type 2, for when you do quantize (Type 1 is plain TPDF; Type 2 is the same TPDF with a high-frequency tilt)', 'SHAPING — noise shaping: Moderate / Normal / Ultra'] },
+    { slug: 'loudness', full: 'Loudness', img: '/assets/module10.png',
+      desc: 'The whole loudness picture in one place — LUFS and true-peak readouts that sign off the master.',
+      body: ['The truth meter at the end of the chain. All meters live here — and only here: two VU dials, two LED peak bars, and six big numeric readouts. Keep Loudness last: module 10’s meters read the signal at module 10’s position in the chain, exactly where they sit.',
+             'Modeled after the WLM Plus Loudness Meter (Waves) — Waves’ loudness meter for broadcast and streaming targets. KSAK-Pre captures its integrated / momentary metering and true-peak watch. One honest note from the booklet: the TARGET selector is stored by presets and shown on the face, but in this build it does not by itself change the audio or drive the limiter — TP CEIL and TP LIMIT are the controls that act.'],
+      controls: ['TP CEIL — the true-peak ceiling the safety limiter aims at (0 to −3 dB); 0 = the limiter is transparent', 'TRIM — level into the measurement/limiter stage (−12 to +12 dB)', 'TARGET — the delivery standard the module’s presets are built around: −24 Broadcast / −14 Streaming / −16 Podcast / −23 EBU (see the honest note in the text)', 'TP LIMIT — engages the true-peak safety limiter; off = metering only', 'RESET METERS — clears peaks, integrated, range, and overs', 'VU meters (L / R) — big analog dials with hardware ballistics; 0 VU = −18 dBFS', 'LED bar meters (L / R) — fast peak meters with a peak-hold line', 'Readouts — TRUE PEAK dBTP · INTEGRATED LUFS (BS.1770) · SHORT-TERM LUFS · MOMENTARY LUFS · RANGE LU · TP LIMITER GR dB'] },
+  ],
+  delay: [
+    { slug: 'modes', full: 'Modes — Five Characters', img: '/assets/mod-delay-modes.png',
+      desc: 'Five characters cover the echo vocabulary — SLAP, DIGITAL, TAPE, ANALOG and PING-PONG, each with its own feedback character.',
+      body: ['Five characters, five ways for repeats to behave. SLAP is a clean, short slapback voice — tight and present, made for the 60–250 ms range — and since v0.1.7 it has its own feedback character: the loop gain is capped at 0.20, so a slap stays a slap — one tight bounce and a short tail — even with the FEEDBACK knob high. FREEZE still overrides the cap.',
+             'DIGITAL is pristine repeats, full bandwidth, no colour — what you play is what comes back. TAPE darkens each pass (the loop is capped at 6.5 kHz) and gently saturates, each pass a little warmer and rounder. ANALOG is bucket-brigade flavour: darker top (loop capped at 7.5 kHz), a low-end lift in the loop, soft saturation. PING-PONG bounces the repeats left–right–left across the stereo field, starting on the opposite side from the input.'],
+      controls: ['SLAP — tight slapback voice; loop gain capped at 0.20', 'DIGITAL — pristine repeats, full bandwidth, no colour', 'TAPE — loop capped at 6.5 kHz, gently saturated each pass', 'ANALOG — loop capped at 7.5 kHz, low-end lift in the loop, soft saturation', 'PING-PONG — repeats bounce left–right, starting opposite the input'] },
+    { slug: 'timing', full: 'Timing — Free or In Sync', img: '/assets/mod-delay-timing.png',
+      desc: 'Free from 1 ms to 2 seconds, or locked to your song — quarter, dotted eighth, eighth, triplet — with Tap Tempo when the host has none.',
+      body: ['Timing runs two ways. FREE: the TIME knob sets the delay directly, 1 ms to 2 seconds. Sync: the delay locks to your DAW’s tempo in the division you pick. The footer always shows the effective time in milliseconds and the tempo in use.',
+             'TAP TEMPO sets the tempo by hand: a single tap sets nothing (an interval is required); taps between 0.15 s and 2.5 s apart are averaged over the last 5 intervals; a gap over 2.5 s clears back to the fallback. When the host reports a tempo, the host wins; otherwise the tapped tempo; otherwise 120 BPM.'],
+      controls: ['FREE — the TIME knob sets the delay directly, 1 ms to 2 seconds', '1/4 · DOTTED 1/8 · 1/8 · TRIPLET — the delay locks to your DAW’s tempo in that division', 'TAP TEMPO — click in rhythm; averaged over the last 5 intervals'] },
+    { slug: 'knob-row', full: 'The Knob Row', img: '/assets/mod-delay-knobs.png',
+      desc: 'Six machined knobs run the engine: TIME, FEEDBACK, TONE, SWING, WIDTH and MIX — with MIX LOCK guarding your balance.',
+      body: ['The working row of The Repeat Deck: six machined knobs, the MIX LOCK padlock beside MIX, and the DUCK / FREEZE pair on the right. Every control starts at a true neutral, so what you hear after you turn a knob is exactly what that knob did.',
+             'TONE is the fastest way to push repeats behind the dry signal — or pull them forward: one knob tilts the feedback loop’s filters, darkening every repeat to the left and thinning them to the right. SWING pushes every second repeat later by up to 50% of the delay time — straight repeats become a shuffle; at dotted-eighth times it is instant groove.'],
+      controls: ['TIME — delay time in FREE mode (1 ms – 2 s); in a sync mode it shows the synced value', 'FEEDBACK — how much of each repeat feeds the next: 0–95%', 'TONE — tilts the loop’s filters; centre is neutral (left darkens, right thins)', 'SWING — pushes every second repeat later, up to 50% of the delay time', 'WIDTH — stereo width of the wet signal only: 0% mono · 100% natural · 200% extra-wide', 'MIX — the wet level against the dry; 0% is the unity default. The padlock beside it is MIX LOCK'] },
+    { slug: 'duck-freeze', full: 'Duck & Freeze', img: '/assets/mod-delay-duckfreeze.png',
+      desc: 'DUCK dips the repeats under the dry signal; FREEZE captures the loop and holds it while you play over the top.',
+      body: ['Two buttons, two stage tricks. DUCK — the repeats automatically dip while the dry signal is loud and bloom back in the gaps. The classic “delay that never talks over the vocal” trick, one button.',
+             'FREEZE stops new audio entering the loop and holds the current repeats, looping them — lightly saturated so they sit still instead of decaying. Play over the top; unfreeze to release. FREEZE overrides the SLAP feedback cap. Try this: FREEZE a long TAPE feedback wash at the end of a chorus, then play the verse over it — the loop ignores your new playing completely.'],
+      controls: ['DUCK — repeats dip under the dry signal automatically', 'FREEZE — capture the loop and play over it; overrides the SLAP feedback cap'] },
+    { slug: 'eq', full: '5-Band EQ — On the Repeats Only', img: '/assets/mod-delay-eq.png',
+      desc: 'A full 5-band EQ that shapes the repeats only — the dry signal is never touched, and each repeat is EQ’d once.',
+      body: ['The EQ sits on the wet path only, outside the feedback loop: it shapes how the repeats sound, never the dry signal, and each repeat is EQ’d once — turning a band up does not compound from repeat to repeat the way a loop filter does. Reach for TONE when you want the repeats to evolve; reach for the EQ when you want them shaped.',
+             'The graph draws the summed curve of all five bands — the same measured-response maths as the DSP, so the curve is the sound. Drag a node sideways for frequency and up or down for gain; the readout line shows the selected band’s exact type, frequency, gain and Q. Bands 1 and 5 carry the full filter set — Bell, Low Shelf, High Shelf, Low Pass, High Pass, Notch, Band Pass (the suite’s first/last-band standard); bands 2–4 offer Bell, Low Shelf and High Shelf. Defaults: band 1 is a low shelf at 60 Hz, bands 2–4 are bells at 220 Hz / 1 kHz / 3.5 kHz, band 5 is a high shelf at 10 kHz. Gain range ±15 dB, Q 0.3–8.'],
+      controls: ['Band chips 1–5 — select a band; double-click a node (or the band’s bypass) to switch one band off', 'The graph — drag nodes for frequency and gain; the curve is the sound', 'FREQ / GAIN / Q mini-knobs — edit the selected band precisely', 'Type menu — bands 1 & 5 carry all seven filter types; bands 2–4 carry Bell + shelves', 'EQ BYPASS — the whole EQ off in one click', 'IN — trims the level entering the plug-in (±24 dB)'] },
+    { slug: 'pan-out-trails', full: 'Pan, Out & Trails', img: '/assets/mod-delay-pan.png',
+      desc: 'PAN places the wet signal, OUT trims the whole plug-in, and TRAILS decides what bypass does to the repeats.',
+      body: ['The exit stage of the deck. PAN places the wet signal in the stereo field — the dry signal is never panned. OUT trims the plug-in’s overall output ±24 dB — match levels when you bypass to compare.',
+             'TRAILS — when ON, bypassing the plug-in lets the current repeats ring out naturally while no new audio enters the loop. When OFF, bypass stops the sound immediately and clears the loop, so the next un-bypass starts from a truly clean slate.'],
+      controls: ['PAN — places the wet signal in the stereo field (dry is never panned)', 'OUT — overall output trim (±24 dB)', 'TRAILS — ON: repeats ring out after bypass · OFF: bypass stops the sound and clears the loop'] },
+  ],
+  reverb: [
+    { slug: 'algorithms', full: 'Five Algorithms', img: '/assets/mod-reverb-algorithms.png',
+      desc: 'ROOM, PLATE, HALL, CHAMBER and SPACE — five spaces one click apart, their characters measured, not just named.',
+      body: ['Five spaces, one click apart on the ALGORITHM rail. ROOM — the default: a believable small space, tight and present, the shortest reflections of the five. PLATE — bright and dense, with a longer tail than the knob suggests: the classic vocal and snare plate. HALL — a big public space: wider geometry, a 20% longer decay than the knob reads. CHAMBER — small and dark, an intimate, absorbent room. SPACE — the vast one: the largest geometry and half again the decay, where the tail becomes part of the music.',
+             'The characters are measured, not just named: in the Nov 3, 2026 sweep the late-tail levels ordered exactly as the design intends — Space > Hall > Plate > Room > Chamber. The fastest way to learn them: load Vocal Plate on a lead vocal, then step through the algorithms with the same settings — one click hears the same decay in five different rooms.'],
+      controls: ['ROOM — tight, present, the shortest reflections of the five', 'PLATE — bright and dense; a longer tail than the knob suggests', 'HALL — wider geometry; a 20% longer decay than the knob reads', 'CHAMBER — small, dark, intimate', 'SPACE — the largest geometry; half again the decay'] },
+    { slug: 'vault-display', full: 'The Vault Display', img: '/assets/mod-reverb-display.png',
+      desc: 'The arched window draws the wet signal’s live spectrum and the tail’s decay curve while the tail sounds.',
+      body: ['The face of The Vault: the arched window shows the wet signal’s live spectrum and the tail’s decay curve, with the current tail level in dB — drawn while the tail sounds.',
+             'It is a working surface, not decoration: watch a SPACE tail hang in the window, or see a dark CHAMBER tail fall away sooner than a HALL tail at the same DECAY setting. The footer mirrors the state in words — the algorithm and decay in use.'],
+      controls: ['Live spectrum of the wet signal, drawn in real time', 'The tail’s decay curve, drawn as it sounds', 'Current tail level readout in dB'] },
+    { slug: 'knob-grid', full: 'The Knob Grid', img: '/assets/mod-reverb-knobs.png',
+      desc: 'Nine gold knobs run the space: DECAY, PRE-DELAY, SIZE across the top; TONE, MOD, WIDTH in the middle; MIX below.',
+      body: ['Nine gold knobs run the space. DECAY — how long the tail takes to fall 60 dB into silence, 0.1 to 30 seconds: the size of the note the room leaves behind. PRE-DELAY — a gap of 0–250 ms between the dry sound and the start of the tail, so the dry sound stays clear while the space blooms behind it (the full 250 ms is honoured at 96 / 192 kHz too). SIZE — the physical size of the space, independent of DECAY: decay is how long; size is how big.',
+             'TONE tilts the tank’s filters — left darkens the tail as it decays (the high end fades first, like a real room), right thins it. MOD keeps gentle movement inside the tail, the way air and small motions keep a real space alive — at 0 the tail is perfectly still. WIDTH is the stereo width of the wet signal only. MIX is the wet level against the dry — 0% is the unity default — and its LOCK is MIX LOCK, which stays locked across preset loads.'],
+      controls: ['DECAY — tail length, 0.1–30 s', 'PRE-DELAY — gap before the tail starts, 0–250 ms', 'SIZE — the physical size of the space, independent of DECAY', 'TONE — tilts the tank’s filters; centre is neutral', 'MOD — gentle movement inside the tail', 'WIDTH — stereo width of the wet signal only (0% mono · 100% natural · 200% extra-wide)', 'MIX — wet level against the dry, with MIX LOCK'] },
+    { slug: 'duck-freeze', full: 'Duck & Freeze', img: '/assets/mod-reverb-duckfreeze.png',
+      desc: 'DUCK dips the tail under the dry signal; FREEZE holds the current space in the air while you play over it.',
+      body: ['DUCK — the tail automatically dips while the dry signal is loud and blooms back in the gaps. The classic “reverb that never talks over the vocal” trick, one button.',
+             'FREEZE stops new audio entering the tank and holds the current space, sustaining it — a light saturation keeps the frozen loop stable. Play over the top; unfreeze to let it die away. The Frozen Hall preset loads with freeze already on.'],
+      controls: ['DUCK — the tail dips under the dry signal automatically', 'FREEZE — hold the space and play over it'] },
+    { slug: 'filters-eq', full: 'Filters & 5-Band EQ — On the Tail Only', img: '/assets/mod-reverb-eq.png',
+      desc: 'Two layers of shaping on the wet path only: input high-pass/low-pass filters, then a 5-band EQ on the finished tail.',
+      body: ['Two layers of shaping, both on the wet path only — the dry signal is never touched. The input filters decide what enters the tank: HIGH-PASS (20 Hz – 1 kHz) keeps low mud out of the reverb so the tail stays clean without thinning the dry sound; LOW-PASS (1–20 kHz) caps how bright the tank can be — it sets the ceiling the TONE knob and the algorithm’s damping work under. Reach for the filters when you want the tail to evolve.',
+             'The 5-band EQ sits after the tank: it shapes how the finished tail sounds, and each piece of tail is EQ’d once — turning a band up does not compound the way a tank filter does. The graph draws the summed curve of all five bands; drag a node for frequency and gain. Bands 1 and 5 carry the full filter set; bands 2–4 carry Bell, Low Shelf and High Shelf. One honest note, documented in the manual: the LOW-PASS knob’s top travel is currently bit-identical between 18 kHz and 20 kHz (in Plate the dead zone starts at about 12.5 kHz), because the knob is composed with the suite’s shared TONE law — the fix is held for a product ruling, and it is written down so it is never a surprise.'],
+      controls: ['HIGH-PASS — 20 Hz – 1 kHz, on the tank input', 'LOW-PASS — 1–20 kHz, on the tank input (top-travel limit documented in the text)', 'Band chips 1–5 + the graph — drag nodes; the readout names the band’s true type, frequency, gain and Q', 'FREQ / GAIN / Q mini-knobs + the type menu, for the selected band', 'EQ BYPASS — the whole EQ off in one click', 'IN — trims the level entering the plug-in (±24 dB); it also sets how hard the space is driven'] },
+    { slug: 'pan-out-trails', full: 'Pan, Out & Trails', img: '/assets/mod-reverb-pan.png',
+      desc: 'A dual pan places each side of the wet signal independently; OUT trims the plug-in; TRAILS decides what bypass does to the tail.',
+      body: ['The PAN section sits framed, on its own: LEFT PAN positions the tail’s left channel in the stereo field, RIGHT PAN the right channel. Both centred is natural stereo. Cross them — left to the right, right to the left — and the tail folds inward; the Crossed Plate preset starts there. The dry signal is never panned.',
+             'OUT trims the plug-in’s overall output ±24 dB — match levels when you bypass to compare. TRAILS — when ON, bypassing lets the current tail ring out naturally while no new audio enters the tank (measured: the bypassed tail matches the never-bypassed tail within 0.5 dB). When OFF, bypass stops the wet sound immediately and empties the tank, so the next un-bypass starts from a truly clean slate.'],
+      controls: ['LEFT PAN / RIGHT PAN — each side of the tail placed independently', 'OUT — overall output trim (±24 dB)', 'TRAILS — ON: the tail rings out after bypass · OFF: bypass stops the wet sound and empties the tank'] },
+  ],
+  omega: [
+    { slug: 'bands', full: 'Bands — The Full 64', img: '/assets/mod-omega-bands.png',
+      desc: '64 fully independent bands, every one carrying all 17 filter types and one of nine vintage curve characters.',
+      body: ['OMEGA carries 64 fully independent bands. The header pill flips between showing 32 and 64; flipping back to 32 holds bands 33–64 in memory, untouched — flip forward again and they are exactly as you left them. New bands arrive flat and bypassed.',
+             'Every band carries all 17 filter types — Bell · Low Shelf · High Shelf · Low Pass · High Pass · Notch · Band Pass · Tilt Shelf · Flat Tilt · Flat Top · Sword (razor bell) · All-Pass · Resonant Low Pass · Resonant High Pass · Steep Low Pass · Steep High Pass · Brick Cut. Pass filters follow the Butterworth law (exactly −3.01 dB at the cutoff, slopes 6–48 dB/oct) and the curves are drawn from the same mathematics that processes the audio — what you see is literally what you get, right up to Nyquist, with no high-frequency cramping. Each band can also wear one of nine vintage curve characters — Digital (exact), Pultec, API, Neve, SSL, Tube, British Console, American Console or Passive — with a Character knob blending in soft saturation on that band’s contribution only.'],
+      controls: ['64 bands (32/64 view; bands 33–64 hold in memory when hidden)', 'All 17 filter types on every band', '9 vintage curve models per band + per-band Character saturation', 'Phase modes per band (Zero Latency and Natural are the working designs)', 'Per-band presets; headphone correction curves on bands 61–64'] },
+    { slug: 'dynamic-spectral', full: 'Dynamic & Spectral Bands', img: '/assets/mod-omega-dynamic.png',
+      desc: 'Every band picks its own mode: Static, Dynamic — a full gain computer per band — or Spectral, cutting only the bins that poke out.',
+      body: ['EXPAND grows the window downward into the full parameters deck — every band’s complete control set: type, slope, vintage, phase, channel, mode, detector and motion. Every band has a Mode: Static, Dynamic or Spectral.',
+             'Dynamic is a full gain computer per band: Threshold, Range, Knee, Attack, Release, Lookahead (to 25 ms), a Relative-threshold mode (the threshold rides the signal’s own slow average, so the band works at any level), Bidirectional movement, and a detector choice — MAIN (the input) or EXT (the sidechain bus). The dynamic offset can be aimed at the transient part of the signal, the sustain part, or both. Spectral works inside a streaming FFT engine: it cuts only the bins that poke above the band’s average by more than the Spectral Threshold, with a Density control for resolution. And any band’s gain or frequency can ride an LFO (free or tempo-synced) or the signal’s own envelope.'],
+      controls: ['Mode per band: Static · Dynamic · Spectral', 'Dynamic: Threshold · Range · Knee · Attack · Release · Lookahead (to 25 ms)', 'Relative-threshold mode · Bidirectional movement · Detector: MAIN or EXT', 'Transient / Sustain split for the dynamic offset', 'Spectral: streaming FFT, Spectral Threshold, Density', 'Motion: LFO or envelope on a band’s gain or frequency'] },
+    { slug: 'channels', full: 'Channels & the Stereo Field', img: '/assets/omega.png',
+      desc: 'Per band: ST, MID, SIDE, L or R — with Field rotation that breathes a band between the centre and the sides. (Full face: the field controls live in the expanded deck.)',
+      body: ['Per band: ST (stereo), MID, SIDE, L or R. The graph’s channel view shows one channel’s curve at a time.',
+             'In the deck, Field L/R rotates a band’s contribution inside the stereo image and Field M/S breathes it between mid and side (clamped so nothing ever folds out of phase). The header MONO pill folds the whole plugin to level-compensated dual-mono, for checking mono compatibility the honest way.'],
+      controls: ['Per-band channels: Stereo · Mid · Side · Left · Right', 'Field L/R rotation — a band’s contribution inside the stereo image', 'Field M/S rotation — a band breathed between mid and side', 'Header MONO pill — level-compensated dual-mono check'] },
+    { slug: 'pitch-engine', full: 'The Pitch Engine', img: '/assets/mod-omega-pitch.png',
+      desc: 'Hears monophonic sources and corrects them to a key and scale — with graph mode, where a captured take becomes note blocks on a piano roll.',
+      body: ['Open it from the pitch capsule’s GRAPH button. OMEGA’s pitch engine hears monophonic sources (five input types: Soprano, Alto/Tenor, Low Male, Bass Voice, Instrument) and corrects them to a key and scale — Major, Minor, Chromatic, or a Custom scale you click together. Retune is the correction speed; Flex-Tune leaves expressive approaches alone until they are truly off; Humanize hands some depth back; Vibrato can be preserved, reduced or enhanced. Formant preserve keeps the voice’s body when the pitch moves; Formant Shift moves the body on purpose. Auto-Key listens to the whole song and names the key — and every OMEGA in the session follows the shared key (Key Sync). MIDI Target: play the melody the voice should sing. Polyphonic honesty: feed it a chord and it stands down instead of guessing.',
+             'Graph mode — the vocal take, on a piano roll. CAPTURE INPUT records the dry input; STOP & ANALYSE cuts it into note blocks. Drag a block up/down to retune that note; Shift-drag slides its timing; per-note vibrato and formant rides are stored with the session. There is also Hum-to-Band: hum one steady note, press the button, and a resonant band appears at exactly that pitch.'],
+      controls: ['Correction to key/scale: Major · Minor · Chromatic · Custom', 'Retune · Flex-Tune · Humanize · Vibrato (preserve / reduce / enhance)', 'Formant preserve and Formant Shift · Transpose · Detune · A4 reference 400–480 Hz', 'Auto-Key + Key Sync across instances', 'MIDI Target — play the melody the voice should sing', 'Graph mode: captured note blocks on a piano roll · Hum-to-Band'] },
+    { slug: 'harmony', full: 'Harmony & the Vocal Stage', img: '/assets/omega.png',
+      desc: 'Three harmony voices off the corrected lead, each with its own interval, level, formant, pan, width and EQ. (Full face: the stage lives in the HARMONY / VOCAL drawer.)',
+      body: ['The HARMONY / VOCAL drawer runs three independent harmony voices off the corrected lead: interval (from an octave down to a major third up, per voice), level, formant, pan, width — and each voice carries its own little EQ (low shelf, presence, air).',
+             'Add the Double Maker (the classic studio double, with width), De-Plosive (tames plosive blasts before they hit the chain) and Breath Control (rides breaths down between phrases). Vocal God Mode is the one-button chain: linked de-ess, harshness, mud, presence and air bands plus harmony and the double.'],
+      controls: ['3 harmony voices: interval · level · formant · pan · width · per-voice EQ', 'Double Maker — the classic studio double, with width', 'De-Plosive — tames plosive blasts before the chain', 'Breath Control — rides breaths down between phrases', 'Vocal God Mode — the one-button vocal chain'] },
+    { slug: 'delta-match-guard', full: 'Delta · Loudness Match · God Guard', img: '/assets/mod-omega-delta.png',
+      desc: 'Hear exactly what the EQ is doing, judge it at matched loudness, and cap the output with a true-peak ceiling.',
+      body: ['Delta (the dock button): OFF / GLOBAL — hear dry-minus-processed, exactly what the EQ is doing — / BAND, that solo for the band chosen in the deck.',
+             'Loudness Match (the MATCH pill) measures input and output loudness (BS.1770) and trims the output so your EQ choices are judged at equal loudness; it defaults OFF, and MATCH LOCK freezes the trim where it stands. God Guard is a lookahead true-peak ceiling for the whole plugin — it rides the output down before inter-sample peaks can clip, and reports its gain reduction in God View. Auto Gain keeps the chain’s loudness honest as you work; Gain Scale breathes the whole curve up or down proportionally.'],
+      controls: ['Delta: OFF / GLOBAL / BAND', 'Loudness Match (BS.1770) + MATCH LOCK', 'God Guard — lookahead true-peak ceiling, GR reported in God View', 'Auto Gain · Gain Scale'] },
+    { slug: 'god-view', full: 'God View & the Ecosystem Link', img: '/assets/mod-omega-godview.png',
+      desc: 'Every OMEGA in the session on one screen — your curve and theirs — with shared-boost collisions flagged.',
+      body: ['Every OMEGA in the session registers with the Ecosystem Link. God View draws all of them — your curve and theirs — and flags shared-boost collisions where instances pile up.',
+             'From there: the AI Mediator proposes complementary moves for colliding instances (ACCEPT applies this instance’s share; the others are listed, in plain words, to apply there); the Session Mastermind reads the whole session and trims the pile-ups; Key Sync keeps one shared song key for every instance; and Style Memory remembers the moves you accept and gently biases future suggestions toward your taste — local, visible in Settings, and erasable in one press. It never phones home — there is no home to phone. Boundary, stated plainly in the manual: KSAK-Pre, Simple Delay and Simple Reverb predate this protocol and do not publish into God View.'],
+      controls: ['God View — every instance on one screen, collisions flagged', 'AI Mediator — complementary moves for colliding instances', 'Session Mastermind — reads the whole session, trims the pile-ups', 'Key Sync — one shared song key', 'Style Memory — local, visible, erasable in one press'] },
+    { slug: 'ai-drawer', full: 'The AI Drawer', img: '/assets/omega.png',
+      desc: 'Local AI that proposes and you dispose: Source ID, the Auto-EQ Assistant, Resonance Hunter, Pitch Brain, Text-to-EQ and more. (Full face: the drawer opens from the AI pill.)',
+      body: ['Open it with the AI pill. Every model is local analysis — spectral statistics, rule systems and your Style Memory. Nothing leaves the machine; nothing needs an account. The standing law: AI proposes, you dispose — nothing changes your sound until you press ACCEPT.',
+             'The shipped set: Source ID names the source it hears and sets the pitch input type; the Auto-EQ Assistant reads the long-term spectrum and proposes a labelled curve; Resonance Hunter draws narrow dynamic cuts at the resonances the scout hears ringing; Pitch Brain derives Retune/Humanize settings from the performance’s own stability and vibrato; Text-to-EQ turns “warmer, less muddy, more air” into an explained curve; plus AI Timing, the Translation Predictor, the Blind Coach, My Mic & Room Profile and the Session Doctor. Two of the fifteen announced features are NOT in this build — AI Harmony Composer (#14) and AI Reference Ghost (#15) have no control anywhere in v0.1.10; the manual declares them openly (§13) as a held, open product call.'],
+      controls: ['Source ID · Auto-EQ Assistant · Resonance Hunter · Pitch Brain', 'Text-to-EQ · AI Timing · Translation Predictor · Blind Coach', 'My Mic & Room Profile · Session Doctor', 'AI proposes, you dispose — ACCEPT is the only moment anything changes', 'Not in this build (manual §13): AI Harmony Composer #14 · AI Reference Ghost #15'] },
+  ],
+  colossus: [
+    { slug: 'clean', full: 'CLEAN Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'Transparent and precise: control without a fingerprint — measured, no saturation even at full Character.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour. The visual is the transfer-curve graph every circuit works through.',
+             'CLEAN — transparent mastering compressors (Kotelnikov class). Character: linear and precise. Control without a fingerprint — measured: no saturation even at full Character. Reach for it when the source sounds right and only needs holding — mastering, delicate buses.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'bus', full: 'BUS Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'RMS-leaning glue in the SSL G-Bus tradition: separate elements start to move as one thing, and punch stays.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'BUS — SSL G-Bus. Character: RMS-leaning glue. Separate elements start to move as one thing; punch stays. Reach for it when a mix, drum bus or backing track needs to gel without going soft.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'fet', full: 'FET Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'Fast, forward, with grit when you drive it — the fastest attack and release of the seven.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'FET — 1176. Character: fast, forward, with grit when you drive it — the fastest attack and release of the seven, with the second-hottest saturation. Reach for it when: rap and rock vocals, snare — anything that needs to jump forward and bite. In the Dual Engine, FET into OPTO is the classic vocal chain: the FET catches the fast peaks, the OPTO smooths what is left.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'opto', full: 'OPTO Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'Smooth and musical, with a program-dependent two-stage release that rides a performance instead of chasing it.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'OPTO — LA-2A. Character: smooth and musical, with a program-dependent two-stage release — quick at first, then easing off slowly, riding a performance instead of chasing it. Reach for it when: vocals and bass that need effortless, natural levelling.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'vari-mu', full: 'VARI-MU Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'Slow, rich glue whose ratio itself grows as the signal gets louder.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'VARI-MU — Fairchild 670 / Manley-style vari-mu. Character: slow, rich glue with harmonic weight. The ratio itself grows as the signal gets louder — measured: gain reduction grows ×2.22 low-to-high, against CLEAN’s ×1.98. Reach for it when: mix buses, mastering glue, and sources that want warmth and size.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'vca-punch', full: 'VCA PUNCH Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'Tight and forward, with thrust — it pushes the middle of the sound at you, controlled.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'VCA PUNCH — API 2500-style VCA. Character: tight and forward, with thrust — it pushes the middle of the sound at you, controlled. Reach for it when: drums and buses that need punch you can feel.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'chameleon', full: 'CHAMELEON Circuit', img: '/assets/mod-colossus-graph.png',
+      desc: 'The Distressor’s range: extended ratios including NUKE, and the hottest saturation of the seven.',
+      body: ['A circuit is a way of hearing level and reacting to it — its speed, its curve, and the colour it leaves behind. All seven were measured pairwise distinct in the v0.1.6 label-truth sweep, and every label matches its measured behaviour.',
+             'CHAMELEON — Distressor. Character: extended ratios (including NUKE), detector band emphasis and drive modes — the hottest saturation of the seven. Reach for it when you need range — parallel crush, room mics, or a sound that has to change character, not just level.'],
+      controls: ['Character / Saturation — this circuit’s own colour amount, clean to driven, never forced', 'Core controls: Threshold · Ratio · Attack · Release · Knee · Range · Make-Up · Mix', 'Detector: Peak · RMS · True-Peak, with detector EQ and SC Listen', 'Runs in Classic, Multiband (per band) or Spectral; stacks in the Dual Engine'] },
+    { slug: 'character', full: 'Character — Per-Circuit Saturation', img: '/assets/colossus.png',
+      desc: 'Every circuit carries its own Character saturation, from clean to driven — per circuit, never forced. (Full face: Character rides each circuit, it has no single panel.)',
+      body: ['Every circuit carries a Character / Saturation amount, from clean to driven. It is per circuit and never forced: CLEAN stays spotless, FET can stay polite, and any circuit is pushed only as far as you choose.',
+             'One honest limit, from the manual: in Multiband, bands carry Character = 0 by design, so per-band saturation does not engage (Appendix A).'],
+      controls: ['Per-circuit amount, from clean to driven', 'CLEAN measures no saturation even at full Character', 'FET carries the second-hottest saturation of the seven; CHAMELEON the hottest', 'Multiband bands carry Character = 0 by design (manual, Appendix A)'] },
+    { slug: 'core-controls', full: 'Core Controls', img: '/assets/mod-colossus-controls.png',
+      desc: 'Threshold, Ratio, Attack, Release, Knee and Mix on the pedestal — the working set of the selected engine.',
+      body: ['These controls belong to the selected engine — or, in Multiband, to the selected band. The pedestal shows the working set; the EXPAND deck shows all of them. Dragging the graph’s knee point moves threshold and ratio together; the mouse wheel over the knee point adjusts the knee.',
+             'The detector is the engine’s ear. The detector EQ shapes what that ear hears — without changing the sound itself: a mini-EQ on the sidechain detector (high-pass, low-pass, a bell, and a de-ess band, each measured true to its label). Roll the lows out of the detector and a bass-heavy signal stops making the whole vocal pump. The detector source can be Internal, External, or a blend — per engine, and per band in Multiband — and SC LISTEN solos the detector signal, so you hear exactly what the engine is hearing.'],
+      controls: ['Threshold — the level where compression begins', 'Ratio — continuous from expansion below 1:1, through gentle control, up to 100:1 and Limit behaviour', 'Attack — microseconds to 250 ms · Release — manual timing, or Auto 1 / Auto 2', 'Hold — keeps gain reduction held before release begins · Knee — how gradually compression arrives', 'Range — caps the maximum gain reduction · Lookahead — 0–20 ms, latency reported honestly', 'Detector — Peak, RMS, or True-Peak, plus a detector mix; detector EQ + SC Listen', 'Make-Up — manual, or Auto · Mix — dry/wet blend · IN / OUT trims'] },
+    { slug: 'dual-engine', full: 'Dual Engine — Stacking Two Circuits', img: '/assets/mod-colossus-dual.png',
+      desc: 'Two full engines in one instance: series (A → B) or parallel (A + B), with LINK tying their thresholds.',
+      body: ['One engine at work. The Dual Engine puts a second full engine beside it — its own circuit, timing, detector and range — inside the same instance, preset and undo history.',
+             'Series (A → B) — the output of A feeds B. The classic example is the vocal chain engineers have used for decades: FET into OPTO — the FET catches the fast peaks, the OPTO smooths what is left. Parallel (A + B) — both engines hear the input and their outputs blend: New York-style parallel compression without any aux routing. LINK ties the two thresholds together, so one move drives both engines at once. The Dual Engine also ships with proven serial chains as starting proposals — FET→Opto vocal, Bus→Limit bus, Opto→Clean level — fully editable, like every preset.'],
+      controls: ['OFF / SERIAL (A → B) / PARALLEL (A + B)', 'LINK — ties the two thresholds together', 'Engine B — its own circuit, timing, detector and range', 'Starting proposals: FET→Opto vocal · Bus→Limit bus · Opto→Clean level'] },
+    { slug: 'architectures', full: 'The Three Architectures', img: '/assets/mod-colossus-arch.png',
+      desc: 'Classic wideband, Multiband with up to 8 bands, or Spectral — plus upward/downward compression and the transient/sustain split.',
+      body: ['Classic — one wideband engine (or the Dual Engine pair) across the whole signal: the classic boxes’ job, and the right default for most tracks. Multiband — up to 8 bands, every band its own compressor: its own circuit, threshold, ratio, attack, release, range, detector and channel target — a VARI-MU band holding the low end with slow, rich glue while a FET band snaps the presence region, in one instance. Its crossovers were rewritten in v0.1.6: the band sum is flat within 0.00 dB from 30 Hz to 12 kHz in both minimum-phase and linear-phase modes. Spectral — dynamic resonance control across frequency, inside a streaming FFT engine: it presses down only the narrow resonances that poke out when the signal gets loud.',
+             'Across the architectures: downward compression tames peaks — the familiar direction — while upward compression lifts quiet detail (tails, breaths, room) up toward the performance; COLOSSUS runs both in one instance, each with its own range. The transient / sustain split compresses the attack of a sound separately from its body. And Delta Listen plays only what the compressor is removing or lifting — per engine, per band, in Spectral, and for upward and downward separately.'],
+      controls: ['CLASSIC — one wideband engine (or the Dual Engine pair)', 'MULTIBAND — up to 8 bands, each a full compressor; minimum-phase or linear-phase crossovers', 'SPECTRAL — dynamic resonance control in a streaming FFT engine', 'Upward + downward compression together, each with its own range', 'Transient / sustain split', 'Delta Listen — hear only the work'] },
+    { slug: 'vocal-tools', full: 'Vocals — The Focused Tools', img: '/assets/colossus.png',
+      desc: 'Vocal God Mode, De-Ess, De-Plosive, Breath Control and the Vocal Rider Layer — the focused vocal drawer. (Full face: the tools live in the Vocal God drawer.)',
+      body: ['The Vocal God drawer — Level, Snap, De-Ess and Breath Lift as one focused layout, on top of the full flagship. The full layout is always one click away. Vocal God Mode: Level is opto-style ease, the smooth levelling job; Snap is FET-style bite, the fast peak job; De-Ess is sibilance control; Breath Lift lifts or settles breaths as their own job. Every control underneath stays fully manual — Vocal God Mode is a doorway, not a cage.',
+             'De-Ess, De-Plosive and Breath Control: a spectral split identifies sibilance, plosive pops and breaths, and each becomes its own dynamic job inside the one instance — tame or lift each separately instead of letting one compressor setting fight all three. The Vocal Rider Layer is a slow pre-leveling stage that rides fader-level gain before compression, so the compressor works less and sounds more natural; the ride is drawn as a proposal you accept and edit phrase by phrase — it is never applied silently.'],
+      controls: ['Vocal God Mode: Level · Snap · De-Ess · Breath Lift', 'De-Ess · De-Plosive · Breath Control — each its own dynamic job', 'Vocal Rider Layer — a slow pre-leveling ride, drawn as an editable proposal'] },
+    { slug: 'ai-proposals', full: 'AI Proposals — You Dispose', img: '/assets/mod-colossus-ai.png',
+      desc: '15 local AI features draw their proposals as ghost curves with plain-word labels — nothing changes until you accept.',
+      body: ['The one law over all of it: AI proposes, you dispose. Every result arrives as a visible proposal — a ghost transfer curve, a ghost gain-reduction pattern, plain-word labels — and only becomes real when you accept it. All AI runs locally on your machine — no cloud, no account, no audio leaves the computer. The propose-only law was verified per button in the full functional audit: every feature produces its proposal with zero parameters moved before APPLY.',
+             'The fifteen: AI Source ID hears what the source is and proposes the circuit and timing defaults that suit it. AI Auto-Comp Assistant draws a full proposal — circuit, threshold, ratio, timing, range — each choice labelled in plain words. AI Timing Brain proposes attack and release per source. AI Pump & Breath Guard offers the smallest fix for unwanted pumping. AI Mix Mediator works across all instances in God View. AI Text-to-Comp builds settings from plain words and explains each choice. AI Style Memory learns your compression taste locally. AI Layer Comp compresses the layers of a finished 2-track separately. AI Session Doctor scans a timeline and marks the problems. Loudness-True / LOUDNESS MATCH keeps comparisons honest. AI Serial Chain Builder proposes the Dual Engine chain. AI Blind Coach lets your ears pick between hidden candidates. AI Translation Predictor warns how a setting travels. AI Dynamic Ride draws the Vocal Rider proposal. AI Reference Ghost draws a Match proposal from a released song’s dynamic fingerprint.'],
+      controls: ['Ghost-curve proposals with plain-word labels — zero parameters move before APPLY', 'AI Source ID · AI Auto-Comp Assistant · AI Timing Brain · AI Pump & Breath Guard', 'AI Mix Mediator · AI Text-to-Comp · AI Style Memory · AI Layer Comp · AI Session Doctor', 'Loudness-True / LOUDNESS MATCH · AI Serial Chain Builder · AI Blind Coach', 'AI Translation Predictor · AI Dynamic Ride · AI Reference Ghost', 'All local — no cloud, no account, no audio leaves the computer'] },
+  ],
+  chronos: [
+    { slug: 'noise', full: 'Noise', img: '/assets/mod-chronos-noise.png',
+      desc: 'Vinyl dust and texture noise under your signal.',
+      body: ['Six modules give CHRONOS its retro colour. Each module is one knob — how much — with an ON pill under the knob that switches that module in or out. NOISE lays vinyl dust and texture noise under your signal.',
+             'Every color module answers to the MAGNET master: with MAGNET at zero the six modules stay silent no matter how their knobs are set — turn the clock up and the deck comes alive.'],
+      controls: ['Amount knob — how much noise rides under the signal', 'ON pill — switch the module in or out', 'Silent at MAGNET 0, whatever the knob says'] },
+    { slug: 'wobble', full: 'Wobble', img: '/assets/mod-chronos-wobble.png',
+      desc: 'The pitch wobble of tired tape and warped vinyl.',
+      body: ['WOBBLE is the pitch wobble of tired tape and warped vinyl — one knob for how much, an ON pill to switch it in or out.',
+             'Macro 4 rides WOBBLE live: it pushes the amount up and switches the module on while the macro is above zero.'],
+      controls: ['Amount knob — depth of the pitch wobble', 'ON pill — switch the module in or out', 'Macro 4 rides WOBBLE'] },
+    { slug: 'distort', full: 'Distort', img: '/assets/mod-chronos-distort.png',
+      desc: 'Drive and grit, from warmth to crunch.',
+      body: ['DISTORT is drive and grit, from warmth to crunch — one knob for how much, an ON pill to switch it in or out.',
+             'Macro 3 rides DISTORT: it pushes the amount up and switches the module on while the macro is above zero.'],
+      controls: ['Amount knob — warmth to crunch', 'ON pill — switch the module in or out', 'Macro 3 rides DISTORT'] },
+    { slug: 'digital', full: 'Digital', img: '/assets/mod-chronos-digital.png',
+      desc: 'Bit-crush and sample-hold grit from early digital gear.',
+      body: ['DIGITAL is bit-crush and sample-hold grit from early digital gear — one knob for how much, an ON pill to switch it in or out.',
+             'Pair it with the sequencer’s PITCH or STUTTER lanes and the retro colour turns rhythmic.'],
+      controls: ['Amount knob — depth of the crush', 'ON pill — switch the module in or out'] },
+    { slug: 'space', full: 'Space', img: '/assets/mod-chronos-space.png',
+      desc: 'A reverb space that opens up behind the sound.',
+      body: ['SPACE is a reverb space that opens up behind the sound — one knob for how much, an ON pill to switch it in or out. Macro 2 rides SPACE: it pushes the amount up and switches the module on while the macro is above zero.',
+             'SPACE is also half of the XY Morph pad: the pad morphs MAGNET and SPACE together between four corner targets, so one drag can open the space while the deck ages — or dry both out.'],
+      controls: ['Amount knob — how much space opens up', 'ON pill — switch the module in or out', 'Macro 2 rides SPACE · XY Morph blends SPACE against MAGNET'] },
+    { slug: 'magnetic', full: 'Magnetic', img: '/assets/mod-chronos-magnetic.png',
+      desc: 'Magnetic tape character and saturation.',
+      body: ['MAGNETIC is magnetic tape character and saturation — one knob for how much, an ON pill to switch it in or out.',
+             'Do not confuse it with the MAGNET clock below the deck: MAGNETIC is one of the six colours; MAGNET is the master amount — and the engage — for the whole color chain.'],
+      controls: ['Amount knob — tape character and saturation', 'ON pill — switch the module in or out'] },
+    { slug: 'magnet', full: 'MAGNET — The Master Clock', img: '/assets/mod-chronos-magnet.png',
+      desc: 'The master amount for the whole color chain, drawn as the clock dial — and as it rises, the face itself ages.',
+      body: ['Below the six color knobs sits the MAGNET clock — the master amount for the whole color chain, drawn as the clock dial. Its hand is live: it shows the MAGNET value. With MAGNET at zero the six modules stay silent no matter how their knobs are set — turn the clock up and the deck comes alive. Every factory preset stores its own MAGNET value, and Macro 1 rides MAGNET live.',
+             'Run the master hard and the machine shows it: a wear layer — fine grain, micro-scratches, grime held in the recesses — fades in with the MAGNET amount, like a deck that has been worked for years. It is display only: it changes no sound, it is strongest at full MAGNET, and at MAGNET 0 it is exactly zero — the face at rest is the locked face, untouched. The clock’s dial face itself never ages; only its bezel wears, so the numerals and the MAGNET lettering stay as crisp as the day they were restored.'],
+      controls: ['Master amount + engage for the whole color chain', 'The live clock hand shows the MAGNET value', 'Face patina fades in with MAGNET — display only; the audio never knows', 'Macro 1 rides MAGNET'] },
+    { slug: 'sequencer', full: 'The 32-Step Sequencer', img: '/assets/mod-chronos-sequencer.png',
+      desc: 'The game board: 32 steps × 9 FX lanes plus a lane per color module — paint steps, set amounts, chain patterns A–H.',
+      body: ['The centre board is time. Paint steps — click a cell to switch it on or off; drag to paint a run of steps. Set a step’s amount with the mouse wheel over a cell (the wheel also switches the step on); a block’s brightness is its amount. SEQ ON, top right of the board, switches the whole sequencer in or out, and the HUD above the board shows the live step (STEP n/32) and the current swing. The nine lanes: STUTTER repeats a slice of the step; REVERSE plays the previous step’s audio backwards; SCRATCH scrubs like a hand on vinyl; TAPE-STOP spins the step down to a stop; X-LOOP repeats the step’s slice in a tight loop; GATE chops the step silent; HALF-TIME reads the previous slice at half speed; FILTER fires the filter move; PITCH shifts pitch on its steps, each step carrying a semitone offset up to ±12.',
+             'Eight pattern pads A–H live under the board (with the Tone EQ strip between board and pads on the face): click a pad to switch patterns on a step boundary, chain patterns to play in sequence (verse → hook → drop, chain length 2 to 8), and let the DICE — the Smart Randomizer — propose a musical pattern as a ghost; nothing changes until you accept it. The CAPTURE button arms a Loop FX capture. Vocal Mode and Drum Mode retune the board’s behaviour per preset: in Vocal Mode a gate step never fully mutes and time-warp amounts soften; in Drum Mode the gate stays shut to 95% of the step and stutters shorten. Deeper still: every step carries a probability of firing — seeded, so the same pattern performs the same chances every render; each lane can swing its own odd steps and span ×0.25 to ×2 of the global step for polyrhythm; and a tenth Freeze lane can hold the audio sample-still for a step’s whole span.'],
+      controls: ['Paint by click/drag · wheel sets a step’s amount · SEQ ON switches the board', '9 lanes: Stutter · Reverse · Scratch · Tape-Stop · X-Loop · Gate · Half-Time · Filter · Pitch', 'Per-step probability (seeded) · per-lane swing · per-lane length ×0.25–×2 · Freeze lane', 'Pattern pads A–H with chaining (2–8) · DICE ghost proposals · CAPTURE arms Loop FX', 'Vocal Mode and Drum Mode lane tunings'] },
+    { slug: 'tone-eq', full: 'The Tone EQ Strip', img: '/assets/mod-chronos-toneeq.png',
+      desc: 'Under the board: HP/LP knobs with slope selectors and three shape-switching bands, with a live true-response curve.',
+      body: ['The strip under the board: HI-PASS and LO-PASS cutoff knobs with a slope chip under each — click the chip to cycle 12 / 24 / 48 dB per octave — and three gain bands, BELL 1 · 2 · 3. Click a band’s knob to select it; the FREQ and Q knobs and the readout follow your selection. Each band’s chip sets its shape: BELL · L-SH (low shelf) · H-SH (high shelf) · NOTCH — the bands shape-shift.',
+             'The LIVE CURVE display draws the true combined shape of all five bands, live. And labels tell the truth: every shape on this strip is measured against the maths its label promises before a build ships — a shelf measures as a shelf, a notch as a notch. That is a standing KSAK law, and it is regression-tested on every build. EQ ON, top left of the strip, is the strip’s own on/off.'],
+      controls: ['HI-PASS / LO-PASS — cutoff knobs with slope chips (12 / 24 / 48 dB/oct)', 'BELL 1 · 2 · 3 — gain knobs; click a band to select it', 'Shape chips per band: BELL · L-SH · H-SH · NOTCH', 'FREQ + Q knobs follow the selected band', 'LIVE CURVE — the true combined response, drawn live', 'EQ ON — the strip’s own switch'] },
+    { slug: 'pitch-tuning', full: 'Pitch & Tuning', img: '/assets/mod-chronos-pitch.png',
+      desc: 'Correction in Natural or Hard Tune mode, formant preserve and real formant shift, tuned to 440, 432 or 444 Hz plus cents.',
+      body: ['The pitch rail: the big display shows the note the engine hears — note name, exact frequency, and cents error — updated live. The selectors under it set the correction mode (Natural / Hard), the key, the scale and the tuning reference (440 Hz shown; 432 / 442 / 444 Hz are in the same menu). Natural keeps the singer’s own voice: the formants are preserved, so a corrected note does not turn chipmunk or dark — measured: on a corrected tone, Natural held the first formant at 592 Hz against a 600 Hz source, where Hard mode dragged it to 632 Hz with the pitch. Hard Tune is the classic instant, stepped correction: formants ride with the pitch. RETUNE is how fast and how hard the correction pulls to the target note; HUMANIZE loosens the correction so a performance keeps its human wobble.',
+             'FORMANT — the real thing: it shifts the voice’s character — its spectral envelope — without moving the pitch. Down darkens and deepens; up brightens and thins. With correction idle, the formant stage is a bit-exact bypass — it costs nothing when it is not working. One honest note from the manual: while the formant stage is engaged it adds about 29 ms (1280 samples at 44.1 kHz) of processing latency, which this build does not yet report to the host. The Pitch Quantizer snaps pitch-lane steps and correction targets to the key and scale you set, with glide stretching the approach to a quantized note instead of jumping — the difference between a ladder and a ramp — and a tempo-synced pitch LFO adds vibrato / wobble / chorus-detune movement under the hood.'],
+      controls: ['Readout — note name, exact frequency, cents error, live', 'Selectors: correction mode (Natural / Hard) · key · scale · tuning reference (440 / 432 / 442 / 444 Hz) + cents', 'RETUNE — how fast and hard the correction pulls', 'HUMANIZE — loosens the correction to keep the human wobble', 'FORMANT — shifts the spectral envelope without moving the pitch', 'PITCH ON — the block’s own switch', 'Pitch Quantizer — key/scale snap + glide'] },
+    { slug: 'loop-fx', full: 'Loop FX — The Loop Lab', img: '/assets/mod-chronos-loopfx.png',
+      desc: 'Capture a beat or whole bars, slice them onto the 32 steps, and tune and colour the loop separately from the dry.',
+      body: ['CAPTURE grabs the audio playing through CHRONOS, click-free with crossfaded edges. Lengths: 1 Beat · 1 Bar · 2 Bars · 4 Bars · 8 Bars — measured exact (1 bar at 120 BPM is precisely 88,200 samples; 1 beat is 22,050). FREE, the length selector’s sixth entry, captures with no fixed length: press CAPTURE to start, press again to end — the loop is exactly the span between your two presses, measured to the sample, with a 40-second buffer cap. With the Time Quantizer on, the capture starts on the grid. LOOP ON plays the captured loop; LOOP MIX (a preset/host parameter, ridden by Macro 7) blends loop against dry. A printed capture carries the post-chain signal — capture the sound with the FX chain baked in — and you can drag from the waveform window straight into your DAW to export the loop as a 16-bit WAV file.',
+             'Modes: Normal (the loop, straight) · Reverse · Ping-Pong (forward, then backwards, alternating) · Half-Speed (pitched down an octave) · Double-Speed (pitched up an octave) · Slice — the loop chopped and its slices mapped to the 32 steps, editable on the SLICES page (which slice plays 1–32, MUTE, REV per slice, and a pitch slider −12…+12 semitones). FREEZE holds the loop in time — at full LOOP MIX the output is the loop alone, frozen. OVERDUB layers new audio into the loop while it plays, with UNDO on a right-click or long-press of the OVERDUB button. With MIDI Play on, notes 45 and 48–55 restart the loop, quantized to the next step boundary.'],
+      controls: ['CAPTURE — 1 Beat · 1 Bar · 2 Bars · 4 Bars · 8 Bars · FREE (press-to-press, sample-exact)', 'Modes: Normal · Reverse · Ping-Pong · Half-Speed · Double-Speed · Slice', 'LOOP ON · LOOP MIX (Macro 7) · Capture/Print with the FX chain baked in · drag-out WAV', 'FREEZE — hold the loop in time · OVERDUB + UNDO · MIDI retrigger', 'SLICES page — per-step slice, MUTE, REV, pitch −12…+12 semitones'] },
+    { slug: 'fx-chain', full: 'FX Batch — The Reorderable Chain', img: '/assets/chronos.png',
+      desc: '25 more effect groups in one chain beyond the color deck and the board — order is yours, and order matters. (Full face: the chain lives on the SETTINGS → FX CHAIN page.)',
+      body: ['Beyond the color deck and the board, CHRONOS carries 25 more effect groups in one chain (SETTINGS → FX CHAIN: the four mode selectors on top, then the 25 chain groups — position, name, ON, amount, move arrows and trigger assignment — in one scrolling page). Order matters — wavefold into bitcrush is not bitcrush into wavefold — and the order is yours: use the arrows on any row to move a group through the chain. Every group has an ON switch, an Amount, and a trigger assignment: run in the Chain always, or fire only on Gate steps, Stutter steps or Filter steps. A group whose lane is off is skipped sample-exactly — it costs nothing.',
+             'The 25 groups: Granular Chop · Buffer Shuffle · Slip · Stretch · Repeat Decay · DJ Filter · Filter Sweep · Feedback · Multiband Distortion · Wavefold · Bitcrush Drop · Reverbs · Spectral Freeze/Blur · Texture Layer · Chorus/Flanger/Phaser · Tremolo · Auto-Pan · Stereo Flip · Ring Mod / Frequency Shift · Vowel Filter · Width Sequencer · Haas · Mid-Side per Step · Pump Sequencer · Transient Chop. The four mode selectors pick the flavour of four groups: REVERB TYPE — Shimmer / Reverse / Gated / Spring / Plate · MODULATION — Chorus / Flanger / Phaser · SPECTRAL — Freeze / Blur · RING / SHIFT — Ring Mod / Frequency Shift. And Stereo Flip’s Amount is a true crossfade, not a switch: 0 = dry stereo (bit-identical), 1 = the full channel swap, every value between the exact mix.'],
+      controls: ['25 groups, reorderable with the move arrows', 'Per group: ON · Amount · trigger (Chain always / Gate steps / Stutter steps / Filter steps)', 'Mode selectors: REVERB TYPE · MODULATION · SPECTRAL · RING / SHIFT', 'Stereo Flip — a true blend crossfade, measured at 0 / 0.25 / 0.5 / 0.75 / 1'] },
+    { slug: 'quantizer', full: 'The Dual Quantizer', img: '/assets/mod-chronos-quantizer.png',
+      desc: 'The Time Quantizer strip: grid, strength and swing keep loop captures and steps honest to the beat.',
+      body: ['The Quantizer strip sits at the bottom left of the face. QUANT is the Time Quantizer on/off. GRID — 1/4 · 1/8 · 1/8T · 1/16 · 1/16T · 1/32 (T = triplet). STRENGTH — how hard timing snaps to the grid: at full strength a loop capture starts on the grid; at zero it starts the moment you press. SWING pushes the off-steps later for groove; the HUD shows the live percentage.',
+             'The dual Quantizer keeps time and pitch honest: its other half, the Pitch Quantizer, lives in the Pitch & Tuning block — pitch-lane steps and correction targets snap to the key and scale you set, and glide stretches the approach to a quantized note instead of jumping.'],
+      controls: ['QUANT — the Time Quantizer on/off', 'GRID — 1/4 · 1/8 · 1/8T · 1/16 · 1/16T · 1/32', 'STRENGTH — how hard timing snaps to the grid', 'SWING — pushes the off-steps later; the HUD shows the live %', 'Pitch Quantizer — key/scale snap + glide (in the pitch block)'] },
+    { slug: 'macros', full: 'Macros 1–8', img: '/assets/mod-chronos-macros.png',
+      desc: 'Eight performance knobs that ride the board’s headline targets — neutral at zero, and they only ever push toward full.',
+      body: ['Macros are a performance layer on top of the preset, never a rewrite of it. A macro only ever pushes its target from where the preset put it toward full — at 0 it changes nothing, exactly. Factory presets store all macros at 0 and render bit-identical with the macro stage in place. Macros and XY moves are recordable as host automation.',
+             'The eight: M1 MAGNET — pushes MAGNET toward full, and engages the color chain with it. M2 SPACE — pushes the SPACE amount up; switches SPACE on while above zero. M3 DISTORT — same pattern. M4 WOBBLE — same pattern. M5 RETUNE — pushes pitch correction toward full strength. M6 SEQ DRIVE — pushes every step amount on the board toward full, all lanes at once. M7 LOOP MIX — pushes the loop’s mix toward full. M8 MIX RIDE — rides the wet/dry mix toward dry: at full macro the output is bit-exact the dry signal.'],
+      controls: ['M1 MAGNET · M2 SPACE · M3 DISTORT · M4 WOBBLE', 'M5 RETUNE · M6 SEQ DRIVE · M7 LOOP MIX · M8 MIX RIDE', 'Neutral at zero — a macro only ever pushes its target toward full', 'Recordable as host automation'] },
+    { slug: 'xy-morph', full: 'XY Morph', img: '/assets/mod-chronos-xy.png',
+      desc: 'Drag the dot: the pad morphs MAGNET and SPACE together between four corner targets — every in-between point a true blend.',
+      body: ['Drag the dot on the XY pad: the pad morphs MAGNET and SPACE together, blending between four corner targets — bottom-left dry, bottom-right full MAGNET, top-left full SPACE, top-right both. Every in-between point is a true bilinear blend, and the position is automatable. Its crosshair sits exactly on the pad artwork’s own centre cross.',
+             'Edit the corners on the XY page of the SETTINGS drawer: eight sliders — a MAGNET and a SPACE target for each corner (00 · 10 · 01 · 11). The defaults are the musical ones — corner 00 dry, 10 full MAGNET, 01 full SPACE, 11 both — and every slider writes into saved state.'],
+      controls: ['XY pad — a bilinear morph of MAGNET × SPACE', 'Four corner targets: 00 dry · 10 full MAGNET · 01 full SPACE · 11 both', 'Corners editable on the XY page (eight sliders)', 'Position is automatable'] },
+    { slug: 'ai-suite', full: 'The AI Suite', img: '/assets/mod-chronos-ai.png',
+      desc: 'Nine local engines propose — ghost patterns, written summaries — and your sound does not change until you press ACCEPT.',
+      body: ['The standing law, in plain words: AI proposes, you dispose. Every AI feature works the same way — it studies your audio or your board and shows you a proposal (a ghost pattern on the board, plus a written summary). Accept is the single moment anything changes; Reject throws the idea away. And it is all local: every engine runs on your machine, and nothing — no audio, no data — ever leaves it. The AI ASSIST master gate governs the suite.',
+             'The nine engines, behind the AI button at the top centre of the face: Source ID listens and labels your material — the starting point the other engines build on. Pattern Builder builds a sequencer pattern that fits your source, biased by your Style Memory. Fill & Transition Builder writes a fill into the last four steps only (28–31) — the rest of your pattern is untouched. Smart Randomizer is the DICE engine: downbeats anchored, pitch steps kept in your key. Text-to-FX turns “lofi crush”, “hard tune shimmer”, “wide freeze” into proposed settings. Loop Finder estimates the loop length in your material and arms a quantized capture on accept. Pitch Brain estimates the key of a phrase and proposes the correction settings to match. Clean-Up hears a problem — rumble, mud — and proposes the fix. Style Memory remembers the proposals you accepted and biases future Pattern Builder ideas toward your taste; view it or erase it any time in SETTINGS.'],
+      controls: ['Nine engines: Source ID · Pattern Builder · Fill & Transition Builder · Smart Randomizer', 'Text-to-FX · Loop Finder · Pitch Brain · Clean-Up · Style Memory', 'Ghost proposals — ACCEPT is the single moment anything changes', 'AI ASSIST master gate · all local — nothing ever leaves the machine'] },
+  ],
+};
+
 
 /* ---------- helpers ---------- */
 const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
@@ -383,6 +705,23 @@ ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
 .videoframe .play{width:74px;height:74px;border-radius:50%;border:2px solid var(--em);color:var(--mint);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 30px rgba(15,224,138,.30)}
 .videoframe h3{margin:6px 0 0;font-size:26px}.videoframe p{color:var(--muted);max-width:520px;margin:0}
 @media(max-width:640px){.hero h1{font-size:36px}.heroemblem{width:150px;height:150px}}
+.ptabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.ptab{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--muted);cursor:pointer;font:inherit}
+.ptab:hover{color:var(--text);border-color:var(--em)}
+.ptab.on{color:#02130a;background:var(--em);border-color:var(--em);font-weight:700}
+.spotwrap{position:relative;overflow:hidden;border-radius:20px}
+.spottrack{display:flex;transition:transform .55s ease}
+.spot{min-width:100%}
+.spot .feature{margin:0}
+.spotdots{display:flex;gap:8px;justify-content:center;padding:14px 0 2px}
+.spotbtn{position:absolute;top:34%;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(2,10,7,.82);color:var(--text);font-size:22px;cursor:pointer;line-height:1;z-index:2}
+.spotbtn:hover{border-color:var(--em);color:var(--mint)}
+@media (prefers-reduced-motion: reduce){.spottrack{transition:none}}
+.modnav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.modnav a{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--muted);text-decoration:none}
+.modnav a:hover{color:var(--text);border-color:var(--em)}
+.modnav a.on{color:#02130a;background:var(--em);border-color:var(--em);font-weight:700}
+.modimg{width:100%;max-width:760px;border-radius:16px;border:1px solid var(--line);display:block}
 .rail{position:fixed;top:0;bottom:0;width:calc((100vw - 1160px)/2);z-index:0;pointer-events:none;overflow:hidden;display:none}
 .rail-l{left:0}.rail-r{right:0}
 .rail::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(15,224,138,.13) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5}
@@ -431,25 +770,64 @@ app.get('/', (req, res) => {
       <a class="cardlink" href="/plugins/${p.slug}">Full details →</a>
     </div>
   </article>`).join('');
-  const chronos = PLUGINS.find(p => p.id === 'chronos');
-  const chronosFeature = `
-  <section class="wrap" id="chronos-feature">
-    <div class="feature">
-      <img src="${chronos.img}" alt="KSAK CHRONOS plugin interface" loading="lazy">
-      <div>
-        <div class="tag">Flagship Spotlight · 06 · ${esc(chronos.sub)} · ${chronos.version}</div>
-        <h2>${esc(chronos.name)}</h2>
-        <p class="hook">${esc(chronos.hook)}</p>
-        <p>${esc(DETAILS.chronos.teaser)}</p>
-        <div class="chips">${chronos.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
-        <div class="row">
-          <a class="btn" href="/plugins/${chronos.slug}">Explore KSAK CHRONOS →</a>
-          <button class="btn locked" disabled>Trial coming soon</button>
+  const spotOrder = ['chronos', 'pre', 'delay', 'reverb', 'omega', 'colossus'];
+  const spotSlides = spotOrder.map((pid, si) => {
+    const p = PLUGINS.find(x => x.id === pid);
+    const num = String(PLUGINS.indexOf(p) + 1).padStart(2, '0');
+    const trialBtn = p.trial === false
+      ? '<button class="btn locked" disabled>Trial coming soon</button>'
+      : (req.user
+        ? `<button class="btn ghost" data-dl="${p.id}">Download trial</button>`
+        : `<a class="btn ghost" href="/auth?notice=${encodeURIComponent('Create an account or sign in to download trials.')}">🔒 Sign in to download</a>`);
+    return `
+    <div class="spot" role="group" aria-label="Spotlight ${si + 1} of ${spotOrder.length}: ${esc(p.name)}">
+      <div class="feature">
+        <img class="spotimg" src="${p.img}" alt="${esc(p.name)} plugin interface" loading="lazy">
+        <div>
+          <div class="tag">Spotlight · ${num} · ${esc(p.sub)} · ${p.version}${p.trial === false ? '' : ' · 30-Day Trial'}</div>
+          <h2 style="color:${p.accent}">${esc(p.name)}</h2>
+          <p class="hook">${esc(p.hook)}</p>
+          <p>${esc(DETAILS[p.id].teaser)}</p>
+          <div class="chips">${p.chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+          <div class="row">
+            <a class="btn" href="/plugins/${p.slug}">Explore ${esc(p.name)} →</a>
+            ${trialBtn}
+          </div>
         </div>
       </div>
+    </div>`;
+  }).join('');
+  const spotDots = spotOrder.map((pid, si) => `<button class="cdot${si === 0 ? ' on' : ''}" data-spot="${si}" aria-label="Spotlight: ${esc(PLUGINS.find(x => x.id === pid).name)}"></button>`).join('');
+  const chronosFeature = `
+  <section class="wrap" id="chronos-feature">
+    <div class="spotwrap" id="spotWrap">
+      <div class="spottrack" id="spotTrack">${spotSlides}</div>
+      <button class="spotbtn cprev" id="spotPrev" aria-label="Previous spotlight plugin">‹</button>
+      <button class="spotbtn cnext" id="spotNext" aria-label="Next spotlight plugin">›</button>
     </div>
+    <div class="spotdots">${spotDots}</div>
+    <script>
+    (function(){
+      var track=document.getElementById('spotTrack'),total=track.children.length,i=0,timer=null;
+      var dots=document.querySelectorAll('[data-spot]');
+      var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function go(n){i=(n+total)%total;track.style.transform='translateX('+(-i*100)+'%)';dots.forEach(function(d,k){d.classList.toggle('on',k===i);});}
+      function stop(){if(timer){clearInterval(timer);timer=null;}}
+      function auto(){stop();if(!reduced){timer=setInterval(function(){go(i+1);},5500);}}
+      document.getElementById('spotNext').addEventListener('click',function(){go(i+1);auto();});
+      document.getElementById('spotPrev').addEventListener('click',function(){go(i-1);auto();});
+      dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.spot);auto();});});
+      var w=document.getElementById('spotWrap');
+      w.addEventListener('mouseenter',stop);w.addEventListener('mouseleave',auto);
+      w.addEventListener('focusin',stop);w.addEventListener('focusout',auto);
+      auto();
+    })();
+    </script>
   </section>`;
-  const nodes = MODULES.map((m, i) => `${i ? '<span class="arrow">›</span>' : ''}<button class="node${i === 0 ? ' on' : ''}" data-i="${i}" aria-label="Module ${m.n} ${esc(m.full)}">${m.n}</button>`).join('');
+  const explorerPlugins = PLUGINS.map(p => ({ id: p.id, slug: p.slug, name: p.name, accent: p.accent, modules: (EXPLORERS[p.id] || []).map((m, i) => ({ n: i + 1, slug: m.slug, full: m.full, desc: m.desc, img: m.img, href: `/plugins/${p.slug}/modules/${m.slug}` })) }));
+  const preExplorer = explorerPlugins[0];
+  const nodes = preExplorer.modules.map((m, i) => `${i ? '<span class="arrow">›</span>' : ''}<button class="node${i === 0 ? ' on' : ''}" data-i="${i}" aria-label="Module ${m.n} ${esc(m.full)}">${m.n}</button>`).join('');
+  const ptabs = explorerPlugins.map((ep, i) => `<button class="ptab${i === 0 ? ' on' : ''}" data-p="${ep.id}" aria-label="Explore ${esc(ep.name)} modules">${esc(ep.name)}</button>`).join('');
   const dl = PLUGINS.map(p => p.trial === false ? `
     <div class="dlrow"><div><b>${esc(p.name)}</b> <span class="muted">${p.version} · VST3 · Windows</span></div>
     <button class="btn locked" disabled>Trial coming soon</button>
@@ -479,16 +857,27 @@ app.get('/', (req, res) => {
   </section>
   ${chronosFeature}
   <section class="wrap"><div class="grid">${cards}</div></section>
-  <section class="wrap blk" >
-    <h2>KSAK-Pre — the chain</h2>
-    <p class="sub">Tap a module. The exact order on a fresh load — Loudness sits last, on purpose.</p>
-    <div class="chain">${nodes}</div>
+  <section class="wrap blk" id="explorer">
+    <h2>Explore the modules</h2>
+    <p class="sub">Pick a plugin, then tap a module to cycle it. KSAK-Pre opens the tour — its exact fresh-load order, Loudness last on purpose. Every module also has its own page.</p>
+    <div class="ptabs">${ptabs}</div>
+    <div class="chain" id="chainNodes">${nodes}</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
-      <img class="chainimg" id="chainImg" src="${MODULES[0].img}" alt="Module panel">
-      <div><div class="tag">Module 1 of 10</div><h3 id="chainName" style="margin:6px 0;font-size:28px">${MODULES[0].full}</h3>
-      <p class="muted" style="max-width:300px">Every module reorderable, every control on the face. Fresh load at unity does nothing — until you dial it in.</p></div>
+      <img class="chainimg" id="chainImg" src="${preExplorer.modules[0].img}" alt="Module panel">
+      <div><div class="tag" id="chainTag">Module 1 of 10 · KSAK-Pre</div><h3 id="chainName" style="margin:6px 0;font-size:28px">${preExplorer.modules[0].full}</h3>
+      <p class="muted" id="chainDesc" style="max-width:300px">${preExplorer.modules[0].desc}</p>
+      <a class="cardlink" id="chainLink" href="${preExplorer.modules[0].href}">Full module page →</a></div>
     </div>
-    <script>var M=${JSON.stringify(MODULES)};document.querySelectorAll('.node').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.node').forEach(function(x){x.classList.remove('on')});b.classList.add('on');var m=M[+b.dataset.i];document.getElementById('chainImg').src=m.img;document.getElementById('chainName').textContent=m.full;});});</script>
+    <script>
+    var EXPLORERS=${JSON.stringify(explorerPlugins)};
+    (function(){
+      var cur=EXPLORERS[0],mi=0;
+      var img=document.getElementById('chainImg'),nameEl=document.getElementById('chainName'),tagEl=document.getElementById('chainTag'),descEl=document.getElementById('chainDesc'),linkEl=document.getElementById('chainLink'),nodesEl=document.getElementById('chainNodes');
+      function drawNodes(){nodesEl.innerHTML=cur.modules.map(function(m,i){return (i?'<span class="arrow">›</span>':'')+'<button class="node'+(i===mi?' on':'')+'" data-i="'+i+'" aria-label="Module '+m.n+' '+m.full+'">'+m.n+'</button>';}).join('');nodesEl.querySelectorAll('.node').forEach(function(b){b.addEventListener('click',function(){pick(+b.dataset.i);});});}
+      function pick(i){mi=i;var m=cur.modules[mi];img.src=m.img;nameEl.textContent=m.full;tagEl.textContent='Module '+m.n+' of '+cur.modules.length+' · '+cur.name;descEl.textContent=m.desc;linkEl.href=m.href;nodesEl.querySelectorAll('.node').forEach(function(x,k){x.classList.toggle('on',k===mi);});}
+      document.querySelectorAll('.ptab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.ptab').forEach(function(x){x.classList.remove('on');});t.classList.add('on');cur=EXPLORERS.filter(function(e){return e.id===t.dataset.p;})[0];mi=0;drawNodes();pick(0);});});
+    })();
+    </script>
   </section>
   <section class="wrap blk" id="downloads">
     <h2>30-Day Trial Downloads</h2>
@@ -621,6 +1010,9 @@ app.get('/plugins/:slug', (req, res, next) => {
     <div class="bio">${d.bio.map(t => `<p>${esc(t)}</p>`).join('')}</div>
     <h2 style="font-size:30px;margin:30px 0 14px">Features</h2>
     <ul class="feat">${d.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+    <h2 style="font-size:30px;margin:30px 0 14px">Modules</h2>
+    <p class="sub muted" style="margin:0 0 14px">Every module and section of ${esc(p.name)}, one page each — what it does, its character, and its real controls.</p>
+    <nav class="modnav">${(EXPLORERS[p.id] || []).map(m => `<a href="/plugins/${p.slug}/modules/${m.slug}">${esc(m.full)}</a>`).join('')}</nav>
     <h2 style="font-size:30px;margin:36px 0 6px">${p.trial === false ? 'Availability' : '30-Day Trial Download'}</h2>
     <p class="sub muted" style="margin:0 0 14px">${p.trial === false
       ? 'CHRONOS is the newest member of the suite. Its trial build is not available yet — the other five plugins\u2019 trials are live for members today.'
@@ -632,6 +1024,43 @@ app.get('/plugins/:slug', (req, res, next) => {
       <a href="/plugins/${prev.slug}">← ${esc(prev.name)}</a>
       <a href="/#downloads">All downloads</a>
       <a href="/plugins/${nxt.slug}">${esc(nxt.name)} →</a>
+    </div>
+  </section>`));
+});
+
+/* ---------- module pages: one per module, data-driven from EXPLORERS ---------- */
+app.get('/plugins/:slug/modules/:mslug', (req, res, next) => {
+  const p = PLUGINS.find(x => x.slug === req.params.slug);
+  if (!p) return next();
+  const mods = EXPLORERS[p.id] || [];
+  const mi = mods.findIndex(m => m.slug === req.params.mslug);
+  if (mi < 0) return next();
+  const m = mods[mi];
+  const prevM = mods[(mi + mods.length - 1) % mods.length];
+  const nxtM = mods[(mi + 1) % mods.length];
+  const modnav = mods.map((q, qi) => `<a href="/plugins/${p.slug}/modules/${q.slug}"${qi === mi ? ' class="on"' : ''}>${esc(q.full)}</a>`).join('');
+  res.send(page(`${m.full} — ${p.name}`, `
+  <section class="wrap" style="padding:36px 20px 10px">
+    <nav class="pnav"><a href="/plugins/${p.slug}">← ${esc(p.name)}</a>${PLUGINS.filter(q => q.id !== p.id).map(q => `<a href="/plugins/${q.slug}">${esc(q.name)}</a>`).join('')}</nav>
+    <div class="tag">${esc(p.name)} · Module ${mi + 1} of ${mods.length}</div>
+    <h1 style="color:${p.accent};font-size:42px;line-height:1.1;margin:8px 0 14px">${esc(m.full)}</h1>
+    <img class="modimg" src="${m.img}" alt="${esc(m.full)} — ${esc(p.name)} face detail">
+    <div class="bio" style="margin-top:22px">${m.body.map(t => `<p>${esc(t)}</p>`).join('')}</div>
+    <h2 style="font-size:28px;margin:28px 0 14px">Controls & parameters</h2>
+    <ul class="feat">${m.controls.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
+    <h2 style="font-size:28px;margin:32px 0 14px">All ${esc(p.name)} modules</h2>
+    <nav class="modnav">${modnav}</nav>
+    <h2 style="font-size:30px;margin:36px 0 6px">${p.trial === false ? 'Availability' : '30-Day Trial Download'}</h2>
+    <p class="sub muted" style="margin:0 0 14px">${p.trial === false
+      ? 'CHRONOS is the newest member of the suite. Its trial build is not available yet — the other five plugins\u2019 trials are live for members today.'
+      : 'Members-only, like every KSAK trial. Create a free account and the download unlocks; links expire 15 minutes after you tap. On day 31 the trial goes silent and locks.'}</p>
+    ${dlRow(p, req.user)}
+    <div id="dlmsg"></div>
+    ${req.user && p.trial !== false ? `<meta name="csrf" content="${esc(req.session.csrf)}">${DL_SCRIPT}` : ''}
+    <div class="prevnext">
+      <a href="/plugins/${p.slug}/modules/${prevM.slug}">← ${esc(prevM.full)}</a>
+      <a href="/plugins/${p.slug}">${esc(p.name)} — full details</a>
+      <a href="/plugins/${p.slug}/modules/${nxtM.slug}">${esc(nxtM.full)} →</a>
     </div>
   </section>`));
 });
