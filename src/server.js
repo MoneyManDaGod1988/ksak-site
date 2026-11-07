@@ -743,7 +743,7 @@ ul.feat li::before{content:'▸ ';color:var(--em);font-weight:700}
 </style></head><body>
 ${sideRails()}
 <header><div class="wrap nav"><a class="brand" href="/"><img class="brandmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><div class="logo">KSAK <span>AUDIO</span></div></a><nav>
-<a href="/plugins">Plugins</a><a href="/showcase">Showcase</a><a href="/plugins/ksak-pre">KSAK-Pre</a><a href="/downloads">Downloads</a>
+<a href="/plugins">Plugins</a><a href="/downloads">Downloads</a><a href="/company">Company</a>
 ${u ? `<a href="/account">My Account</a>${u.role === 'owner' ? '<a href="/owner">Owner</a>' : ''}
 <form method="post" action="/auth/signout" style="display:inline"><input type="hidden" name="_csrf" value="${esc(extraCsrf())}"><button class="btn ghost" type="submit">Sign out</button></form>`
   : `<a href="/auth">Sign in</a><a class="btn" href="/auth?mode=signup">Create account</a>`}
@@ -1009,7 +1009,34 @@ app.get('/plugins', (req, res) => {
     <div class="tag">The KSAK Audio Effects Plugin Suite</div>
     <h1 style="font-size:46px;line-height:1.08;margin:8px 0 10px">Six plugins. One suite.</h1>
     <p class="sub muted" style="margin:0 0 22px">A complete vocal chain, two feel-first essentials, and three flagships. Open any plugin for its full story — every trial runs 30 days, then locks.</p>
-    <div class="grid">${cards}</div>
+    ${showcaseCarousel()}
+    <div class="grid" style="margin-top:28px">${cards}</div>
+  </section>`));
+});
+
+/* ---------- company: the Company tab's own page ---------- */
+app.get('/company', (req, res) => {
+  const suite = PLUGINS.map(p => `
+    <li><a href="/plugins/${p.slug}"><b style="color:${p.accent}">${esc(p.name)}</b></a> <span class="muted">— ${esc(p.sub)}. ${esc(p.hook)}</span></li>`).join('');
+  res.send(page('Company — KSAK Audio', `
+  <section class="wrap" style="padding:36px 20px 10px">
+    <div class="tag">The Company</div>
+    <h1 style="font-size:46px;line-height:1.08;margin:8px 0 10px">KSAK Audio</h1>
+    <p class="sub" style="font-size:19px;margin:0 0 18px">The plugins of the future.</p>
+    <div class="bio">
+      <p>KSAK Audio builds professional audio plugins. Its product line is the KSAK Audio Effects Plugin Suite — six VST3 plugins for Windows that cover the whole vocal chain and beyond: a complete channel strip, two feel-first essentials, and three flagships.</p>
+      <p>Every plugin in the suite is an original design, built to one house standard: low CPU usage with powerful results. A CPU budget is part of each plugin's spec from the start — power is never bought by thinning the sound.</p>
+    </div>
+    <h2 style="font-size:30px;margin:30px 0 14px">The suite</h2>
+    <ul class="feat">${suite}</ul>
+    <p class="sub muted">Browse the full suite on the <a href="/plugins">Plugins page</a> — every plugin has its own page with its full story.</p>
+    <h2 style="font-size:30px;margin:30px 0 14px">How KSAK Audio works</h2>
+    <div class="bio">
+      <p><b>30-day trials, right here.</b> KSAK plugins are tried free for 30 days through this site. Downloads are members-only: create a free account and the trials unlock — no account, no download.</p>
+      <p><b>Free updates for life.</b> Every KSAK Audio license includes lifetime free updates for the licensed product: buy once, and every future version is free. Updates and new versions are delivered through your KSAK account on this site — sign in and they are there.</p>
+      <p><b>Built to a CPU budget.</b> Low CPU usage with powerful results is a flagship feature of every plugin in the suite — both halves, or neither.</p>
+    </div>
+    <p style="margin-top:26px"><a class="btn" href="/downloads">Get the 30-day trials</a> <a class="btn ghost" href="/auth?mode=signup">Create account</a></p>
   </section>`));
 });
 
@@ -1061,8 +1088,8 @@ app.get('/plugins/:slug', (req, res, next) => {
   </section>`));
 });
 
-/* ---------- showcase: interactive slides + video ---------- */
-app.get('/showcase', (req, res) => {
+/* ---------- showcase carousel: lives on /plugins (the merged Plugins tab) ---------- */
+function showcaseCarousel() {
   const slides = PLUGINS.map((p, i) => `
     <div class="cslide" role="group" aria-label="Slide ${i + 1} of ${PLUGINS.length}: ${esc(p.name)}">
       <img src="${p.img}" alt="${esc(p.name)} plugin interface" loading="lazy">
@@ -1074,12 +1101,7 @@ app.get('/showcase', (req, res) => {
       </div>
     </div>`).join('');
   const dots = PLUGINS.map((p, i) => `<button class="cdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="Go to ${esc(p.name)}"></button>`).join('');
-  res.send(page('Showcase', `
-  <section class="wrap hero" style="padding-bottom:6px">
-    <h1>The <em>Showcase</em></h1>
-    <p>Six plugins, one suite — flip through the faces, then watch this space for sound.</p>
-  </section>
-  <section class="wrap" style="padding-bottom:10px">
+  return `
     <div class="carousel" id="ksakCarousel">
       <div class="ctrack" id="ksakTrack">${slides}</div>
       <button class="cbtn cprev" id="ksakPrev" aria-label="Previous plugin">‹</button>
@@ -1103,20 +1125,11 @@ app.get('/showcase', (req, res) => {
       c.addEventListener('focusin',stop);c.addEventListener('focusout',auto);
       auto();
     })();
-    </script>
-  </section>
-  <section class="wrap blk" id="showcase-video">
-    <h2>Watch</h2>
-    <p class="sub">Sound first: walkthroughs and audio demos for every plugin in the suite.</p>
-    <!-- Video slot: no KSAK product video exists yet. When one is published,
-         drop the YouTube embed iframe in place of the .videoframe block below. -->
-    <div class="videoframe">
-      <div class="play">▶</div>
-      <h3>Showcase videos coming soon</h3>
-      <p>Walkthroughs, preset tours and sound demos for all six plugins are in production. When the first video lands, it plays right here.</p>
-    </div>
-  </section>`));
-});
+    </script>`;
+}
+
+/* ---------- showcase: merged into the Plugins tab — old links land on /plugins ---------- */
+app.get('/showcase', (req, res) => res.redirect(301, '/plugins'));
 
 /* ---------- gated downloads ---------- */
 app.post('/api/download-link', (req, res) => {

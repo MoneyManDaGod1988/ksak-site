@@ -82,11 +82,11 @@ async function main() {
     check('Unknown plugin slug 404s', badPage.status === 404, `status ${badPage.status}`);
 
     const showRes = await req(null, '/showcase');
-    const show = await showRes.text();
-    check('Showcase page serves with all 6 plugins in the slides', showRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => show.includes(n)), `status ${showRes.status}`);
-    check('Showcase has working carousel markup + video slot', show.includes('id="ksakCarousel"') && show.includes('id="ksakPrev"') && show.includes('id="ksakNext"') && show.includes('Showcase videos coming soon'));
-    check('Showcase links every slide to its plugin page, no forbidden strings, no /dl/ leak', ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => show.includes(`/plugins/${s}`)) && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(show) && !show.includes('/dl/'));
-    check('Nav links to the Showcase page', home.includes('href="/showcase"'));
+    check('/showcase permanently redirects (301) to the merged Plugins tab', showRes.status === 301 && (showRes.headers.get('location') || '') === '/plugins', `status ${showRes.status} → ${showRes.headers.get('location') || ''}`);
+    const navOf = (html) => { const m = html.match(/<nav>([\s\S]*?)<\/nav>/); return m ? m[1] : ''; };
+    const homeNav = navOf(home);
+    check('Nav (signed-out) tabs: Plugins/Downloads/Company — no Showcase or KSAK-Pre tabs',
+      homeNav.includes('href="/plugins"') && homeNav.includes('href="/downloads"') && homeNav.includes('href="/company"') && !homeNav.includes('href="/showcase"') && !homeNav.includes('>KSAK-Pre<'));
 
     // --- Module explorer: all six plugins + per-plugin module data ---
     const EXPECT_COUNTS = { pre: 10, delay: 6, reverb: 6, omega: 8, colossus: 13, chronos: 16 };
@@ -126,12 +126,22 @@ async function main() {
     const plug = await plugRes.text();
     check('/plugins is a dedicated page listing all six plugins with links to each plugin page',
       plugRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => plug.includes(n)) && ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => plug.includes(`/plugins/${s}`)), `status ${plugRes.status}`);
+    check('/plugins carries the showcase carousel above the cards: 6 slides, controls, every slide links to its plugin page',
+      plug.includes('id="ksakCarousel"') && plug.includes('id="ksakTrack"') && plug.includes('id="ksakPrev"') && plug.includes('id="ksakNext"') && (plug.match(/class="cslide"/g) || []).length === 6 && plug.indexOf('id="ksakCarousel"') < plug.indexOf('class="grid"') && !plug.includes('/dl/'));
     const dlpRes = await req(null, '/downloads');
     const dlp = await dlpRes.text();
     check('/downloads is a dedicated page: six rows, signed-out lock, CHRONOS Trial coming soon, no leaks',
       dlpRes.status === 200 && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => dlp.includes(n)) && dlp.includes('Sign in to download') && dlp.includes('Trial coming soon') && !dlp.includes('data-dl') && !dlp.includes('/dl/') && !/kurt|moneyman|stratford|shoot for|johnstown/i.test(dlp), `status ${dlpRes.status}`);
+    const compRes = await req(null, '/company');
+    const comp = await compRes.text();
+    check('/company is a dedicated page: brand, tagline, six-product suite with links, documented commitments',
+      compRes.status === 200 && comp.includes('KSAK Audio') && comp.includes('KSAK Audio Effects Plugin Suite') && comp.includes('plugins of the future') && comp.includes('30-day trials') && comp.includes('Free updates for life') && comp.includes('low CPU usage with powerful results') && ['KSAK-Pre', 'Simple Delay', 'Simple Reverb', 'OMEGA EQ', 'COLOSSUS', 'KSAK CHRONOS'].every(n => comp.includes(n)) && ['ksak-pre', 'simple-delay', 'simple-reverb', 'omega-eq', 'colossus', 'ksak-chronos'].every(s => comp.includes(`/plugins/${s}`)) && comp.includes('href="/plugins"') && comp.includes('href="/downloads"'), `status ${compRes.status}`);
+    check('/company has zero personal-reference strings and no prices',
+      !/kurt|moneyman|stratford|shoot for|shoot4|johnstown|s4ts/i.test(comp) && !/\$\s?\d/.test(comp));
+    check('Company tab appears in the shared nav on other pages too',
+      plug.includes('href="/company"') && chrPage.includes('href="/company"') && dlp.includes('href="/company"'));
     check('Nav tabs point at dedicated pages, not homepage anchors',
-      home.includes('href="/plugins"') && home.includes('href="/downloads"') && home.includes('href="/plugins/ksak-pre"') && !home.includes('href="/#downloads"') && !home.includes('href="/#pre"'));
+      home.includes('href="/plugins"') && home.includes('href="/downloads"') && home.includes('href="/company"') && home.includes('href="/plugins/ksak-pre"') && !home.includes('href="/showcase"') && !home.includes('href="/#downloads"') && !home.includes('href="/#pre"'));
 
     let allImg = true;
     for (const a of ['pre', 'delay', 'reverb', 'omega', 'colossus', 'chronos', 'module01', 'module02', 'module03', 'module04', 'module05', 'module06', 'module07', 'module08', 'module09', 'module10']) {
@@ -163,6 +173,9 @@ async function main() {
     const acct = await (await req(member, '/account')).text();
     const csrf = (acct.match(/meta name="csrf" content="([a-f0-9]+)"/) || [])[1];
     check('Account page carries CSRF token', !!csrf);
+    const acctNav = navOf(acct);
+    check('Nav (signed-in) tabs: Plugins/Downloads/Company/My Account — no Showcase or KSAK-Pre tabs',
+      acctNav.includes('href="/plugins"') && acctNav.includes('href="/downloads"') && acctNav.includes('href="/company"') && acctNav.includes('href="/account"') && !acctNav.includes('href="/showcase"') && !acctNav.includes('>KSAK-Pre<'));
     const dlpIn = await (await req(member, '/downloads')).text();
     check('Signed-in /downloads unlocks trial buttons (gate preserved), CHRONOS still unwired', dlpIn.includes('data-dl="pre"') && dlpIn.includes('name="csrf"') && !dlpIn.includes('data-dl="chronos"'));
 
