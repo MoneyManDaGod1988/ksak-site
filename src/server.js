@@ -3,7 +3,8 @@
  * KSAK Audio — plugins website with custom accounts and gated trial downloads.
  * Single-file Express + SQLite (better-sqlite3) app.
  * Env: PORT, SESSION_SECRET (accepted for future cookie-signing use; sessions
- * are server-side random tokens), DOWNLOADS_DIR, DB_PATH, NODE_ENV.
+ * are server-side random tokens), DOWNLOADS_DIR, DB_PATH, NODE_ENV,
+ * GOATCOUNTER_CODE (optional; see below).
  */
 const path = require('path');
 const fs = require('fs');
@@ -17,6 +18,16 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'ksak.
 const IS_PROD = (process.env.NODE_ENV || '') === 'production';
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 const DL_TOKEN_TTL_MS = 1000 * 60 * 15; // 15 minutes
+
+/* GoatCounter analytics — privacy-respecting pageviews only (no cookies,
+ * honours Do Not Track, no custom events). To enable: set GOATCOUNTER_CODE
+ * to the site's GoatCounter code — the subdomain of its count endpoint,
+ * i.e. for https://<code>.gc.zgo.at the value is just <code>. When the code
+ * is unset or malformed, no script is emitted and the site is unchanged. */
+const GOATCOUNTER_CODE = (process.env.GOATCOUNTER_CODE || '').trim();
+const GOATCOUNTER_SNIPPET = /^[a-z0-9][a-z0-9-]*$/i.test(GOATCOUNTER_CODE)
+  ? `<script data-goatcounter="https://${GOATCOUNTER_CODE}.gc.zgo.at/count" async src="https://gc.zgo.at/count.js"></script>`
+  : '';
 
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 const db = new Database(DB_PATH);
@@ -750,6 +761,7 @@ ${u ? `<a href="/account">My Account</a>${u.role === 'owner' ? '<a href="/owner"
 </nav></div></header>
 ${body}
 <footer><div class="wrap foot"><img class="footmark" src="/img/ksak-emblem.png" alt="KSAK Audio"><span>© KSAK Audio · KSAK Audio Effects Plugin Suite · VST3 · Windows</span></div></footer>
+${GOATCOUNTER_SNIPPET}
 </body></html>`;
 }
 let _locals = { user: null, csrf: '' };
