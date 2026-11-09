@@ -8,14 +8,14 @@ const ROOT = path.join(__dirname, '..');
 const TMP = '/tmp/ksak-verify';
 const PORT = 3219;
 const BASE = `http://127.0.0.1:${PORT}`;
-const EXPECTED = { pre: 10061054, delay: 11134938, reverb: 6860072, omega: 8802406, colossus: 15759996, chronos: 22956094 };
+const EXPECTED = { pre: 10061054, delay: 11134938, reverb: 6860072, omega: 8802406, colossus: 15759996, chronos: 22958207 };
 const FILES = {
   pre: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07-fixall/KSAK-Pre-Setup-v0.3.12-TRIAL.exe',
   delay: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07-fixall/KSAK-Simple-Delay-Setup-v0.1.9-TRIAL.exe',
   reverb: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07/KSAK-Simple-Reverb-Setup-v0.1.7-TRIAL.exe',
   omega: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07-fixall/KSAK-Omega-EQ-Setup-v0.1.13-TRIAL.exe',
   colossus: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07-liveness/KSAK-Colossus-Setup-v0.1.8-TRIAL.exe',
-  chronos: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-07-fixall/KSAK-CHRONOS-Setup-v0.1.3-TRIAL.exe',
+  chronos: '/home/hatch/workspace/your_files/ksak-trial-builds/rebuild-2026-11-08-readability/KSAK-CHRONOS-Setup-v0.1.4-TRIAL.exe',
 };
 let failures = 0;
 const results = [];
